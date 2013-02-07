@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Countdown – Talkie demo 01</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		
+		<script src="../lib/d3.v3.js"></script>
+		<script src="../talkie-1.0.js"></script>
+		
+		<style>
+			#display {
+				width: 100%;
+				height: 500px;
+				text-align: center;
+				font-size: 576px;
+				font-weight: bold;
+				line-height: 500px;
+			}
+			#display #big-number {
+				vertical-align: middle;
+				position: relative;
+				top: -50px;
+			}
+		</style>
+	</head>
+	<body id="example-01-countdown">
+		<div id="wrapper">
+			<div id="display">
+				<span id="big-number">5</span>
+			</div>
+		
+			<div id="controls">
+				<audio id="soundtrack" controls="controls">
+					<source src="audio/01.countdown.ogg" type="audio/ogg">
+					<source src="audio/01.countdown.mp3" type="audio/mpeg">
+				</audio>
+			</div>
+		</div>
+		
+		<script>
+			var soundtrack = document.getElementById("soundtrack");
+			var big_number = Talkie.animate("#big-number");
+			Talkie.timeline(soundtrack, [
+				["0:01", function() { big_number.text("5", "4"); }],
+				["0:02", function() { big_number.text("4", "3"); }],
+				["0:03", function() { big_number.text("3", "2"); }],
+				["0:04", function() { big_number.text("2", "1"); }],
+				["0:05", function() {
+					big_number.text("1", "✺").style("font-size", "576px", "12px", 0)
+						.style([
+							["font-size", "12px", "576px"],
+							["color", "#000000", "#F83195"]
+						], 500);
+				}]
+			]);
+		</script>
+	</body>
+</html>

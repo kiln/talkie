@@ -1,0 +1,12 @@
+{
+    "name": "Talkie",
+    "version": "1.0.0",
+    
+    "author": "Robin Houston <robin@kiln.it>",
+    "homepage": "http://kiln.it/talkie/",
+    
+    "devDependencies": {
+        "uglify-js": "2.2.4",
+        "less": "1.3.3"
+    }
+}
