@@ -44,6 +44,7 @@
 				var stickman_object = document.getElementById("stickman"),
 				    stickman_document = stickman_object.contentDocument,
 				    stickman = d3.select(stickman_document).select("svg"),
+				    stickman_anim = Talkie.animate(stickman_document.getElementById("stickman"))
 				    left_arm  = stickman.select("#left-arm"),
 				    right_arm = stickman.select("#right-arm"),
 				    left_anim = Talkie.animate(left_arm.node()),
@@ -74,12 +75,16 @@
 			
 				Talkie.timeline(soundtrack, [
 					["0:00.10", function() {
-						Talkie.animate(stickman_document.getElementById("stickman"))
-							.attr("transform", "translate(-500 0)", "translate(500 0)", 2000);
+						stickman_anim.attr("transform", "translate(-500 0)", "translate(500 0)", 2000);
 					}],
 					["0:02.60", function() {
-						Talkie.animate(stickman_document.getElementById("stickman"))
-							.attr("transform", "translate(500 0)", "translate(0 0)", 1000);
+						stickman_anim.attr("transform", "translate(500 0)", "translate(0 0)", 1000);
+					}],
+					["0:04.50", function() {
+						stickman.select("#stickman").attr("transform", "translate(0 0)")
+							.transition().duration(600).ease(function(t) {
+								return 1 - Math.pow(2*t-1, 2);
+							}).attr("transform", "translate(0 -100)");
 					}],
 					
 					["0:06.00", function() {
@@ -165,6 +170,7 @@
 					["0:18.00", function() {
 						left_anim.attr("d", d_l_toes, d_l, 200);
 						right_anim.attr("d", d_r_toes, d_r, 200);
+						stickman_anim.attr("transform", "scale(1) translate(0 0)", "scale(1.8) translate(-165 -50)");
 					}]
 				]);
 			}
