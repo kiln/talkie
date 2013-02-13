@@ -1,0 +1,6 @@
+[submodule "demos/01.countdown"]
+	path = demos/01.countdown
+	url = git@gist.github.com:4742904.git
+[submodule "demos/02.head-shoulders"]
+	path = demos/02.head-shoulders
+	url = git@gist.github.com:4742544.git

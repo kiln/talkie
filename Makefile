@@ -11,7 +11,7 @@ all: talkie-1.0.js talkie-1.0.min.js examples/style.css
 clean:
 	@rm -f talkie-1.0.js talkie-1.0.min.js
 
-talkie-1.0.js: src/core.js src/jquery.js src/maps.js src/slider.js src/svg_animation.js src/timeline.js
+talkie-1.0.js: src/core.js src/jquery.js src/maps.js src/slider.js src/animation.js src/timeline.js
 	./build.sh $^ > $@.tmp && mv $@.tmp $@
 
 %.min.js: %.js

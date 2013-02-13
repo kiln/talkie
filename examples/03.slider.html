@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Slider – Talkie demo 02</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
+    <script src="../lib/d3.v3.js"></script>
+    <script src="../talkie-1.0.js"></script>
+  </head>
+  <body id="example-02-slider">
+    <div id="wrapper">
+      <div id="panels">
+        <div class="panel" id="panel-5"><span>5</span></div>
+        <div class="panel" id="panel-4"><span>4</span></div>
+        <div class="panel" id="panel-3"><span>3</span></div>
+        <div class="panel" id="panel-2"><span>2</span></div>
+        <div class="panel" id="panel-1"><span>1</span></div>
+        <div class="panel" id="panel-0"><span>✺</span></div>
+      </div>
+    
+      <div id="controls">
+        <audio id="soundtrack" controls="controls">
+          <source src="audio/01.countdown.ogg" type="audio/ogg">
+          <source src="audio/01.countdown.mp3" type="audio/mpeg">
+        </audio>
+      </div>
+    </div>
+    
+    <script>
+      Talkie.panels("#panels");
+      Talkie.timeline("#soundtrack", {
+        "0:01": Talkie.panel("4"),
+        "0:02": Talkie.panel("3"),
+        "0:03": Talkie.panel("2"),
+        "0:04": Talkie.panel("2"),
+        "0:05": Talkie.panel("1")
+      });
+      d3.select("#panel-0").on("Talkie.panel.load", function() {
+        d3.select("#panel-0 span").style("font-size", "12px").style("color": "#000000")
+          .transition().duration(500).style("font-size", "576px").style("color", "#F83195");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Heads &amp; Shoulders – Talkie demo 02</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
+    <script src="../lib/d3.v3.js"></script>
+    <script src="../talkie-1.0.js"></script>
+    
+    <style>
+      #stickman { width: 360px; height: 473px; margin: auto; display: block; }
+      #credits  { text-align: right; margin: 8px 6px 0 0; }
+      #credits a { color: #C3004D; }
+    </style>
+  </head>
+  <body id="example-02-head-shoulders" onunload="">
+    <div id="wrapper">
+      <div id="play"></div>
+      <object id="stickman" data="media/02/stickman.svg" type="image/svg+xml" onload="init()"></object>
+      <audio id="controls" controls="controls">
+        <source src="audio/02.head-shoulders.ogg" type="audio/ogg">
+        <source src="audio/02.head-shoulders.mp3" type="audio/mpeg">
+      </audio>
+      <div id="credits">
+        Code by <a href="http://kiln.it">Kiln</a>
+        <span style="margin: 0 0.5em">•</span>
+        Singing and artwork by Miri Tilden (age 5½)
+      </div>
+    </div>
+    
+    <script>
+      function init() {
+        var play_button = d3.select("#play");
+        var svg = document.getElementById("stickman").contentDocument,
+            animate = Talkie.animate(svg),
+            stickman = animate.select("#stickman"),
+            arms = animate.select("#arms");
+        
+        Talkie.timeline("#controls", {
+          0.1: stickman.attr("transform", "translate(500 0)", 2000),
+          2.6: stickman.attr("transform", "translate(0 0)", 1000),
+          4.5: function() {
+            // Make the stickman jump
+            // This example shows how you can run arbitrary code at a particular time
+            stickman.element.attr("transform", "translate(0 0)")
+              .transition().duration(600).ease(function(t) {
+                return 1 - Math.pow(2*t-1, 2);
+              }).attr("transform", "translate(0 -100)");
+          },
+          
+          6.0: action("head"),
+          6.5: action("shoulders"),
+          7.2: action("knees"),
+          7.7: action("toes"),
+          8.2: action("knees"),
+          8.7: action("toes"),
+          
+          9.0: action("relax"),
+          
+          10.0: action("eyes"),
+          11.2: action("ears"),
+          12.3: action("mouth"),
+          13.5: action("nose"),
+
+          14.0: action("relax"),
+          
+          14.3: action("head"),
+          15.1: action("shoulders"),
+          15.7: action("knees"),
+          16.2: action("toes"),
+          16.7: action("knees"),
+          17.2: action("toes"),
+          
+          18.0: stickman.attr("transform", "scale(1.8) translate(-165 -50)", 1000)
+                        .and( action("relax") )
+        }, {
+          onplay: function() { play_button.remove(); }
+        });
+
+        function action(tag) {
+          return animate.select("#"+tag).style("opacity", "1", 100)
+                   .and( arms.attributes(["d"], "#arms-" + tag, 200) );
+        }
+        
+        play_button.on("click", function() {
+          document.getElementById("controls").play();
+        });
+      }
+    </script>
+  </body>
+</html>
