@@ -2,25 +2,24 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Heads &amp; Shoulders – Talkie demo 02</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Head &amp; Shoulders – Talkie demo 02</title>
+    <link rel="stylesheet" type="text/css" href="media/02/style.css">
     
+    <!-- scripts -->
     <script src="../lib/d3.v3.js"></script>
     <script src="../talkie-1.0.js"></script>
-    
-    <style>
-      #stickman { width: 360px; height: 473px; margin: auto; display: block; }
-      #credits  { text-align: right; margin: 8px 6px 0 0; }
-      #credits a { color: #C3004D; }
-    </style>
+    <!-- /scripts -->
   </head>
+  
   <body id="example-02-head-shoulders" onunload="">
     <div id="wrapper">
       <div id="play"></div>
       <object id="stickman" data="media/02/stickman.svg" type="image/svg+xml" onload="init()"></object>
       <audio id="controls" controls="controls">
+        <!-- audio -->
         <source src="audio/02.head-shoulders.ogg" type="audio/ogg">
         <source src="audio/02.head-shoulders.mp3" type="audio/mpeg">
+        <!-- /audio -->
       </audio>
       <div id="credits">
         Code by <a href="http://kiln.it">Kiln</a>
@@ -31,61 +30,70 @@
     
     <script>
       function init() {
-        var play_button = d3.select("#play");
         var svg = document.getElementById("stickman").contentDocument,
-            animate = Talkie.animate(svg),
-            stickman = animate.select("#stickman"),
-            arms = animate.select("#arms");
+            animate = Talkie.animate(svg);
         
+        var arms = animate.select("#arms");
+        function touch(body_part) {
+          return function() {
+            if (body_part.match(/^(eyes|ears|mouth|nose)$/))
+              animate.select("#"+body_part).style("opacity", "1", 100).run();
+            arms.attributes(["d"], "#arms-"+body_part, 200).run();
+          };
+        }
+        
+        var stickman = animate.select("#stickman");
         Talkie.timeline("#controls", {
           0.1: stickman.attr("transform", "translate(500 0)", 2000),
           2.6: stickman.attr("transform", "translate(0 0)", 1000),
           4.5: function() {
             // Make the stickman jump
-            // This example shows how you can run arbitrary code at a particular time
             stickman.element.attr("transform", "translate(0 0)")
               .transition().duration(600).ease(function(t) {
                 return 1 - Math.pow(2*t-1, 2);
               }).attr("transform", "translate(0 -100)");
           },
           
-          6.0: action("head"),
-          6.5: action("shoulders"),
-          7.2: action("knees"),
-          7.7: action("toes"),
-          8.2: action("knees"),
-          8.7: action("toes"),
+          6.0: touch("head"),
+          6.5: touch("shoulders"),
+          7.2: touch("knees"),
+          7.7: touch("toes"),
+          8.2: touch("knees"),
+          8.7: touch("toes"),
           
-          9.0: action("relax"),
+          9.0: touch("neutral"),
           
-          10.0: action("eyes"),
-          11.2: action("ears"),
-          12.3: action("mouth"),
-          13.5: action("nose"),
-
-          14.0: action("relax"),
+          10.0: touch("eyes"),
+          11.2: touch("ears"),
+          12.3: touch("mouth"),
+          13.5: touch("nose"),
           
-          14.3: action("head"),
-          15.1: action("shoulders"),
-          15.7: action("knees"),
-          16.2: action("toes"),
-          16.7: action("knees"),
-          17.2: action("toes"),
+          14.0: touch("neutral"),
           
-          18.0: stickman.attr("transform", "scale(1.8) translate(-165 -50)", 1000)
-                        .and( action("relax") )
+          14.3: touch("head"),
+          15.1: touch("shoulders"),
+          15.7: touch("knees"),
+          16.2: touch("toes"),
+          16.7: touch("knees"),
+          17.2: touch("toes"),
+          
+          18.0: function() {
+            // A compound touch involving animations on different elements: move
+            // the arms into the neutral position, and zoom in on stickman’s face.
+            touch("neutral")();
+            stickman.attr("transform", "scale(1.8) translate(-165 -50)", 1000).run();
+          }
         }, {
-          onplay: function() { play_button.remove(); }
+          onplay: removePlayButton
         });
-
-        function action(tag) {
-          return animate.select("#"+tag).style("opacity", "1", 100)
-                   .and( arms.attributes(["d"], "#arms-" + tag, 200) );
-        }
         
+        var play_button = d3.select("#play");
         play_button.on("click", function() {
           document.getElementById("controls").play();
         });
+        function removePlayButton() {
+          play_button.remove();
+        }
       }
     </script>
   </body>

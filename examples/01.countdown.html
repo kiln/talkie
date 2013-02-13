@@ -1,42 +1,50 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Countdown – Talkie demo 01</title>
-		<link rel="stylesheet" type="text/css" href="style.css">
-		
-		<script src="../lib/d3.v3.js"></script>
-		<script src="../talkie-1.0.js"></script>
-		
-		<style>
-			#display { width: 100%; height: 500px; text-align: center; font-size: 576px; line-height: 500px; }
-			#display #big-number { vertical-align: middle; position: relative; top: -50px; font-weight: bold; }
-		</style>
-	</head>
-	<body id="example-01-countdown">
-		<div id="wrapper">
-			<div id="display">
-				<span id="big-number">5</span>
-			</div>
-		
-			<div id="controls">
-				<audio id="soundtrack" controls="controls">
-					<source src="audio/01.countdown.ogg" type="audio/ogg">
-					<source src="audio/01.countdown.mp3" type="audio/mpeg">
-				</audio>
-			</div>
-		</div>
-		
-		<script>
-			var number = Talkie.animate().select("#big-number");
-			Talkie.timeline("#soundtrack", {
-				"0:01": number.text("4"),
-				"0:02": number.text("3"),
-				"0:03": number.text("2"),
-				"0:04": number.text("1"),
-				"0:05": number.style("font-size", "12px").text("✺")
-				              .style({"font-size": "576px", "color": "#F83195"}, 500)
-			});
-		</script>
-	</body>
+  <head>
+    <meta charset="utf-8">
+    <title>Countdown – Talkie demo 01</title>
+    
+    <!-- scripts -->
+    <script src="../lib/d3.v3.js"></script>
+    <script src="../talkie-1.0.js"></script>
+    <!-- /scripts -->
+    
+    <style>
+      body { background: white; font-family: Helvetica, Arial, sans-serif; }
+      #wrapper { width: 800px; margin: auto; position: relative; }
+      #controls { width: 790px; padding: 0 5px; }
+      #controls audio { width: 100%; }
+      #display { width: 100%; height: 450px; text-align: center; font-size: 526px; line-height: 450px; }
+      #display #big-number { vertical-align: middle; position: relative; top: -50px; font-weight: bold; }
+    </style>
+  </head>
+  
+  <body id="example-01-countdown">
+    <div id="wrapper">
+      <div id="display">
+        <span id="big-number">5</span>
+      </div>
+    
+      <div id="controls">
+        <audio id="soundtrack" controls="controls">
+          <!-- audio -->
+          <source src="audio/01.countdown.ogg" type="audio/ogg">
+          <source src="audio/01.countdown.mp3" type="audio/mpeg">
+          <!-- /audio -->
+        </audio>
+      </div>
+    </div>
+    
+    <script>
+      var number = Talkie.animate().select("#big-number");
+      Talkie.timeline("#soundtrack", {
+        "0:01": number.text("4"),
+        "0:02": number.text("3"),
+        "0:03": number.text("2"),
+        "0:04": number.text("1"),
+        "0:05": number.style("font-size", "12px").text("✺")
+                      .style({"font-size": "576px", "color": "#F83195"}, 500)
+      });
+    </script>
+  </body>
 </html>

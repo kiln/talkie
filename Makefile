@@ -4,12 +4,15 @@ UGLIFY_OPTS=-m -c
 LESSC=node_modules/less/bin/lessc
 LESSC_OPTS=
 
-.PHONY: all clean
+.PHONY: all clean demos
 
 all: talkie-1.0.js talkie-1.0.min.js examples/style.css
 
 clean:
 	@rm -f talkie-1.0.js talkie-1.0.min.js
+
+demos:
+	./demos.sh
 
 talkie-1.0.js: src/core.js src/jquery.js src/maps.js src/slider.js src/animation.js src/timeline.js
 	./build.sh $^ > $@.tmp && mv $@.tmp $@

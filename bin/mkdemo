@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+
+use warnings; use strict;
+
+my $mode = "cat";
+while (<>) {
+    if (m{<!-- (/)?(audio|scripts) -->}) {
+        if ($1) {
+            die "Mismatched tags" unless $mode eq $2;
+            $mode = "cat";
+        }
+        else {
+            die "Mismatched tags" unless $mode eq "cat";
+            $mode = $2;
+        }
+        next;
+    }
+    
+    if ($mode eq "audio") {
+        s{src="audio/([^\s"]+\.(?:ogg|mp3))"}{src="http://kiln.it/talkie/examples/audio/$1"}g;
+    }
+    elsif ($mode eq "scripts") {
+        s{src="\.\./lib/(d3\.v\d)(?:\.min)?\.js"}{src="http://d3js.org/$1.min.js"};
+        s{src="\.\./(talkie-[\d.]+)(?:\.min)?\.js"}{src="http://kiln.it/$1.min.js"};
+    }
+    
+    s{"media/\d\d/([^"]+)"}{"$1"}g;
+    
+    print;
+}
