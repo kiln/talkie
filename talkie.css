@@ -1,0 +1,26 @@
+.talkie-slider-frame {
+  padding: 14px 10px 10px 10px;
+  background: white;
+  width: 680px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  -moz-border-bottom-left-radius: 10px;
+  -moz-border-bottom-right-radius: 10px;
+  position: relative;
+  left: 25px;
+  overflow: hidden;
+}
+.talkie-slider-frame-inner {
+  width: 680px;
+  height: 350px;
+  overflow: hidden;
+}
+.talkie-panels {
+  width: 32767px;
+  height: 350px;
+}
+.talkie-panel {
+  width: 680px;
+  height: 350px;
+  float: left;
+}

@@ -17,7 +17,7 @@ demos:
 publish: all
 	scp talkie-1.0*.js kiln:kiln.it/
 
-talkie-1.0.js: src/core.js src/jquery.js src/maps.js src/slider.js src/animation.js src/timeline.js
+talkie-1.0.js: src/core.js src/events.js src/jquery.js src/maps.js src/slider.js src/animation.js src/timeline.js
 	./build.sh $^ > $@.tmp && mv $@.tmp $@
 
 %.min.js: %.js
