@@ -75,7 +75,7 @@ Talkie.panels = function(element_or_selector) {
             });
         }
         
-        Talkie.fireEvent("torkie.panel.load", panel_elements[selected_panel]);
+        Talkie.fireEvent("Talkie.panel.load", panel_elements[selected_panel]);
     };
     panelChanged();
     
