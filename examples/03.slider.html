@@ -15,8 +15,8 @@
       #wrapper { width: 750px; margin: auto; position: relative; }
       #controls { width: 740px; padding: 0 5px; }
       #controls audio { width: 100%; }
-      .talkie-panel { font-size: 320px; text-align: center; }
-      #panel-0 { color: #F83195; }
+      .talkie-panel { font-size: 320px; text-align: center; line-height: 320px; }
+      .talkie-panel span { vertical-align: middle; }
     </style>
   </head>
   <body id="example-02-slider">
@@ -49,9 +49,9 @@
         "0:04": panels.panel("1"),
         "0:05": panels.panel("0")
       });
-      d3.select("#panel-0").on("Talkie.panel.load", function() {
+      Talkie.addEventListener("panel-0", "Talkie.panel.load", function() {
         d3.select("#panel-0 span").style("font-size", "12px").style("color", "#000000")
-          .transition().duration(500).style("font-size", "576px").style("color", "#F83195");
+          .transition().duration(1500).style("font-size", "320px").style("color", "#F83195");
       });
     </script>
   </body>
