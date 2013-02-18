@@ -8,12 +8,12 @@ function _t(timecode) {
     return parseFloat(timecode);
 }
 
-function run(animation) {
+function run(animation, timeline_object) {
     if (typeof animation === "function") {
-        animation(Talkie.fast_forward);
+        animation.call(timeline_object);
     }
     else {
-        animation.run();
+        animation.run(timeline_object);
     }
 }
 
@@ -34,11 +34,29 @@ function order_timeline(timeline_object) {
     return track_animations;
 }
 
-var animation_undo_stack = [],
-    animation_current_index = -1; // index of last animation performed
-var timecode;
-Talkie.timeline = function(soundtrack_element, timeline_object, options) {
-    var track_animations = order_timeline(timeline_object);
+Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
+    var animation_undo_stack = [],
+        animation_current_index = -1; // index of last animation performed
+    var timecode;
+    
+    var timeline_object = {
+        rewind: function() {
+            if (soundtrack_element.readyState >= 1) {
+                animation_undo_stack = [];
+                animation_current_index = -1;
+                soundtrack_element.pause();
+                soundtrack_element.currentTime = 0;
+            }
+        },
+        setUndo: function(undo_function) {
+            animation_undo_stack.push([timecode, undo_function, animation_current_index]);
+        },
+        undoInteraction: function(undo_function) {
+            animation_undo_stack.push([Infinity, undo_function, animation_current_index]);
+        }
+    };
+
+    var track_animations = order_timeline(timeline_spec);
     if (typeof soundtrack_element === "string") {
         soundtrack_element = document.querySelector(soundtrack_element);
     }
@@ -47,7 +65,7 @@ Talkie.timeline = function(soundtrack_element, timeline_object, options) {
             && animation_undo_stack[animation_undo_stack.length-1][0] > this.currentTime)
         {
             var stack_top = animation_undo_stack.pop();
-            stack_top[1]();
+            stack_top[1].call(timeline_object);
             animation_current_index = stack_top[2];
         }
         
@@ -55,9 +73,9 @@ Talkie.timeline = function(soundtrack_element, timeline_object, options) {
              i < track_animations.length && track_animations[i][0] <= this.currentTime;
              i++
         ) {
-            Talkie.fast_forward = (i+1 < track_animations.length && track_animations[i+1][0] <= this.currentTime);
+            timeline_object.fast_forward = (i+1 < track_animations.length && track_animations[i+1][0] <= this.currentTime);
             timecode = track_animations[i][0];
-            run(track_animations[i][1]);
+            run(track_animations[i][1], timeline_object);
             animation_current_index = i;
         }
     }, false);
@@ -65,17 +83,5 @@ Talkie.timeline = function(soundtrack_element, timeline_object, options) {
         soundtrack_element.addEventListener("play", options.onplay, false);
     }
     
-    return {
-        rewind: function() {
-            if (soundtrack_element.readyState >= 1) {
-                animation_undo_stack = [];
-                animation_current_index = -1;
-                soundtrack_element.pause();
-                soundtrack_element.currentTime = 0;
-            }
-        }
-    };
-}
-Talkie.setAnimationUndo = function(undo_function) {
-    animation_undo_stack.push([timecode, undo_function, animation_current_index]);
+    return timeline_object;
 }

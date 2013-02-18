@@ -1,4 +1,4 @@
-function startTransition(element, duration, easing) {
+function startTransition(element, timeline, duration, easing) {
     if (typeof duration === "undefined") duration = 0;
     
     cancelTransition(element);
@@ -63,12 +63,12 @@ Talkie_Animate.prototype.raw = function() {
 };
 
 animation_methods.push("text");
-Talkie_Animate.prototype.text = function(element, to_text, duration, easing) {
-    var t = startTransition(element, duration, easing);
+Talkie_Animate.prototype.text = function(element, timeline, to_text, duration, easing) {
+    var t = startTransition(element, timeline, duration, easing);
     var from_text = element.text();
     t.text(to_text);
     
-    Talkie.setAnimationUndo(function() {
+    timeline.setUndo(function() {
         cancelTransition(element);
         element.text(from_text);
     });
@@ -77,12 +77,12 @@ Talkie_Animate.prototype.text = function(element, to_text, duration, easing) {
 };
 
 animation_methods.push("attr");
-Talkie_Animate.prototype.attr = function(element, attribute, to_value, duration, easing) {
-    var t = startTransition(element, duration, easing);
+Talkie_Animate.prototype.attr = function(element, timeline, attribute, to_value, duration, easing) {
+    var t = startTransition(element, timeline, duration, easing);
     var from_value = element.attr(attribute);
     t.attr(attribute, to_value);
     
-    Talkie.setAnimationUndo(function() {
+    timeline.setUndo(function() {
         cancelTransition(element);
         element.attr(attribute, from_value);
     });
@@ -91,10 +91,10 @@ Talkie_Animate.prototype.attr = function(element, attribute, to_value, duration,
 };
 
 animation_methods.push("attributes");
-Talkie_Animate.prototype.attributes = function(element, attributes, target_selector, duration, easing) {
+Talkie_Animate.prototype.attributes = function(element, timeline, attributes, target_selector, duration, easing) {
     var target = this._element(target_selector);
     
-    var t = startTransition(element, duration, easing)
+    var t = startTransition(element, timeline, duration, easing)
     var from_values = [];
     for (var i=0; i < attributes.length; i++) {
         var attribute = attributes[i];
@@ -102,7 +102,7 @@ Talkie_Animate.prototype.attributes = function(element, attributes, target_selec
         t.attr(attribute, target.attr(attribute));
     }
     
-    Talkie.setAnimationUndo(function() {
+    timeline.setUndo(function() {
         cancelTransition(element);
         for (var i=0; i < attributes.length; i++) {
             element.attr(attributes[i], from_values[i]);
@@ -112,12 +112,12 @@ Talkie_Animate.prototype.attributes = function(element, attributes, target_selec
     return this;
 };
 
-Talkie_Animate.prototype._style_single = function(element, style, to_value, duration, easing) {
-    var t = startTransition(element, duration, easing);
+Talkie_Animate.prototype._style_single = function(element, timeline, style, to_value, duration, easing) {
+    var t = startTransition(element, timeline, duration, easing);
     var from_value = element.style(style);
     t.style(style, to_value);
     
-    Talkie.setAnimationUndo(function() {
+    timeline.setUndo(function() {
         cancelTransition(element);
         element.style(style, from_value);
     });
@@ -125,8 +125,8 @@ Talkie_Animate.prototype._style_single = function(element, style, to_value, dura
     return this;
 };
 
-Talkie_Animate.prototype._style_multi = function(element, style_changes, duration, easing) {
-    var t = startTransition(element, duration, easing);
+Talkie_Animate.prototype._style_multi = function(element, timeline, style_changes, duration, easing) {
+    var t = startTransition(element, timeline, duration, easing);
     
     var from_values = {};
     for (var style in style_changes) {
@@ -135,7 +135,7 @@ Talkie_Animate.prototype._style_multi = function(element, style_changes, duratio
         t.style(style, style_changes[style]);
     }
     
-    Talkie.setAnimationUndo(function() {
+    timeline.setUndo(function() {
         cancelTransition(element);
         for (var style in style_changes) {
             if (!style_changes.hasOwnProperty(style)) continue;
@@ -147,7 +147,7 @@ Talkie_Animate.prototype._style_multi = function(element, style_changes, duratio
 };
 
 animation_methods.push("style");
-Talkie_Animate.prototype.style = function(element, discriminator) {
+Talkie_Animate.prototype.style = function(element, timeline, discriminator) {
     if (typeof discriminator === "string") {
         return this._style_single.apply(this, arguments);
     }
@@ -187,17 +187,17 @@ Talkie_Animate_Element.prototype.and = function(chained_animation) {
     r.animations.push(["and", chained_animation]);
     return r;
 };
-Talkie_Animate_Element.prototype.run = function() {
+Talkie_Animate_Element.prototype.run = function(timeline) {
     for (var i=0; i < this.animations.length; i++) {
         var animation = this.animations[i],
             method = animation[0],
             args = animation[1];
         
         if (method === "and") {
-            if (typeof args === "function") args(Talkie.fast_forward); else args.run();
+            if (typeof args === "function") args.call(timeline); else args.run(timeline);
         }
         else if (!this.element.empty()) {
-            this.animate[method].apply(this.animate, [this.element].concat(args));
+            this.animate[method].apply(this.animate, [this.element, timeline].concat(args));
         }
     }
 };

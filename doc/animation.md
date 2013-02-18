@@ -29,11 +29,11 @@ Supported **options** are:
 
 A good Talkie will allow random access as well as sequential play: the user may click about in the audio controls, skipping back and forth between different parts of the track. The Talkie library takes care of the necessary book-keeping, and the actions defined by the animation module are built to undo themselves where necessary, but if you define your own custom actions then you will need to define what (if anything) needs to happen when the action is undone.
 
-A user-defined action is just be a function, run at the appropriate point. If the action leaves a lasting change that should be undone when the user skips back, the action should call `Talkie.setAnimationUndo` passing the reversal procedure. The function is given an argument whose value is true if the animation should be skipped over rather than performed at normal speed. Here is a complete example of a custom action that uses jQuery to fade in a particular element at the two-second mark:
+A user-defined action is just be a function, run at the appropriate point. If the action leaves a lasting change that should be undone when the user skips back, the action should call `this.setUndo` passing the reversal procedure. The `fast_forward` property is true if the animation should be skipped over rather than performed at normal speed. Here is a complete example of a custom action that uses jQuery to fade in a particular element at the two-second mark:
 
     Talkie.timeline("#soundtrack", {
-      "0:02": function(fast_forward) {
-        if (fast_forward) {
+      "0:02": function() {
+        if (this.fast_forward) {
           // If we’re just skipping past this point rather than lingering here,
           // it typically looks better just to transition the element to its
           // post-animation state immediately without performing the actual animation.
@@ -46,7 +46,7 @@ A user-defined action is just be a function, run at the appropriate point. If th
           $("#logo").fadeIn();
         }
         
-        Talkie.setAnimationUndo(function() {
+        this.setUndo(function() {
           // To undo the action, hide the logo
           $("#logo").hide();
         });

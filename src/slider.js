@@ -1,6 +1,6 @@
 var selected_panel_name,
     selectPanelByName, selectNextPanel, selectPreviousPanel;
-Talkie.panels = function(element_or_selector) {
+Talkie.slider = function(element_or_selector) {
     var panels;
     if (typeof element_or_selector === "string") {
         panels = document.querySelector(element_or_selector);
@@ -13,20 +13,49 @@ Talkie.panels = function(element_or_selector) {
     frame.className = "talkie-slider-frame";
     var frame_inner = document.createElement("div");
     frame_inner.className = "talkie-slider-frame-inner";
+
+    var arrow_prev = document.createElement("div");
+    arrow_prev.className = "talkie-slider-arrowprev";
+    var arrow_prev_link = document.createElement("a");
+    arrow_prev_link.className = "talkie-slider-arrowprev-link";
+    arrow_prev_link.setAttribute("href", "#");
+    var arrow_prev_img = document.createElement("img");
+    arrow_prev_img.setAttribute("src", "../images/arrow-prev.png");
+    arrow_prev_img.setAttribute("width", "24");
+    arrow_prev_img.setAttribute("height", "43");
+    arrow_prev_img.setAttribute("alt", "⬅");
+    arrow_prev_link.appendChild(arrow_prev_img);
+    arrow_prev.appendChild(arrow_prev_link);
+
+    var arrow_next = document.createElement("div");
+    arrow_next.className = "talkie-slider-arrownext";
+    var arrow_next_link = document.createElement("a");
+    arrow_next_link.className = "talkie-slider-arrownext-link";
+    arrow_next_link.setAttribute("href", "#");
+    var arrow_next_img = document.createElement("img");
+    arrow_next_img.setAttribute("src", "../images/arrow-next.png");
+    arrow_next_img.setAttribute("width", "24");
+    arrow_next_img.setAttribute("height", "43");
+    arrow_next_img.setAttribute("alt", "➡");
+    arrow_next_link.appendChild(arrow_next_img);
+    arrow_next.appendChild(arrow_next_link);
+    
+    frame.appendChild(arrow_prev);
     frame.appendChild(frame_inner);
+    frame.appendChild(arrow_next);
     panels.parentNode.insertBefore(frame, panels);
     
     var selected_panel = 0;
     var panel_elements = [];
     for (var i=0; i < panels.childNodes.length; i++) {
         var node = panels.childNodes[i];
-        if (node.getAttribute && node.className === "talkie-panel")
+        if (node.getAttribute && node.className === "talkie-slider-panel")
             panel_elements.push(panels.childNodes[i]);
     }
     var num_panels = panel_elements.length;
     frame_inner.appendChild(panels);
-    if (panels.className) panels.className += " talkie-panels";
-    else panels.className = "talkie-panels";
+    // if (panels.className) panels.className += " talkie-panels";
+    // else panels.className = "talkie-panels";
     
     var panels_by_name = {};
     for (var i=0; i < num_panels; i++) {
@@ -42,31 +71,32 @@ Talkie.panels = function(element_or_selector) {
         var navdots = d3.select(".navdotcontainer").selectAll(".navdot");
     }
     
-    var panelChanged = function() {
+    // explicitly - true if the panel was changed explicitly by the user
+    var panelChanged = function(explicitly) {
+        var previously_selected_panel_name = selected_panel_name;
         selected_panel_name = panel_elements[selected_panel].id.substr("panel-".length);
         
         if (d3) {
             d3.select(panels).transition().duration(500)
                 .style("margin-left", (-frame_inner.clientWidth * selected_panel) + "px");
         
-            d3.select("#arrowprevious").transition().duration(500).style("opacity", selected_panel == 0 ? 0 : 1);
-            d3.select("#arrownext").transition().duration(500).style("opacity", selected_panel == num_panels-1 ? 0 : 1);
+            d3.select(arrow_prev).transition().duration(500).style("opacity", selected_panel == 0 ? 0 : 1);
+            d3.select(arrow_next).transition().duration(500).style("opacity", selected_panel == num_panels-1 ? 0 : 1);
         }
         else {
             panels.style.marginLeft = (-frame_inner.clientWidth * selected_panel) + "px";
         
             if (selected_panel == 0) {
-                var arrow_prev_style = document.getElementById("arrowprevious").style;
-                arrow_prev_style.opacity = 1;
-                arrow_prev_style.visibility = "hidden";
+                arrow_prev.style.opacity = 1;
+                arrow_prev.style.visibility = "hidden";
             }
             else
-                document.getElementById("arrowprevious").style.visibility = "visible";
+                arrow_prev.style.visibility = "visible";
         
             if (selected_panel == num_panels-1)
-                document.getElementById("arrownext").style.visibility = "hidden";
+                arrow_next.style.visibility = "hidden";
             else
-                document.getElementById("arrownext").style.visibility = "visible";
+                arrow_next.style.visibility = "visible";
         }
 
         if (navdots) {
@@ -75,7 +105,11 @@ Talkie.panels = function(element_or_selector) {
             });
         }
         
-        Talkie.fireEvent("Talkie.panel.load", panel_elements[selected_panel]);
+        Talkie.fireEvent("Talkie.slider.load", panel_elements[selected_panel], {
+            "explicitly": explicitly,
+            "fromPanel": previously_selected_panel_name,
+            "toPanel": selected_panel_name
+        });
     };
     panelChanged();
     
@@ -90,7 +124,6 @@ Talkie.panels = function(element_or_selector) {
 
     if (navdots) {
         navdots.on("click", function(i) {
-            if (track != null && !track.paused) track.pause();
             selectPanel(i);
             return false;
         });
@@ -100,23 +133,21 @@ Talkie.panels = function(element_or_selector) {
         if (selected_panel == num_panels-1) return;
         
         selected_panel++;
-        if (track != null && !track.paused) track.pause();
-        panelChanged();
+        panelChanged(true);
     };
     selectPreviousPanel = function() {
         if (selected_panel == 0) return;
         
         selected_panel--;
-        if (track != null && !track.paused) track.pause();
-        panelChanged();
+        panelChanged(true);
     };
     
-    addEventListener("arrownext-link", "click", function(e) {
-        preventDefault(e);
+    Talkie.addEventListener(arrow_next_link, "click", function(e) {
+        Talkie.preventDefault(e);
         selectNextPanel();
     });
-    addEventListener("arrowprevious-link", "click", function(e) {
-        preventDefault(e);
+    Talkie.addEventListener(arrow_prev_link, "click", function(e) {
+        Talkie.preventDefault(e);
         selectPreviousPanel();
     });
     
@@ -125,16 +156,13 @@ Talkie.panels = function(element_or_selector) {
             return function() {
                 var previously_selected_panel = selected_panel_name;
                 selectPanelByName(panel_name);
-                Talkie.setAnimationUndo(function() {
+                this.setUndo(function() {
                     selectPanelByName(previously_selected_panel);
                 });
             };
+        },
+        "slideTo": function(panel_name) {
+            selectPanelByName(panel_name);
         }
     };
-};
-
-
-var animatePanelTransition = function(from_panel, to_panel) {
-    Talkie.selectPanelByName(to_panel);
-    Talkie.setAnimationUndo(function() { Torkie.selectPanelByName(from_panel); });
 };

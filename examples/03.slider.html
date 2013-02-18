@@ -12,22 +12,22 @@
     
     <style>
       body { background: white; font-family: Helvetica, Arial, sans-serif; }
-      #wrapper { width: 750px; margin: auto; position: relative; }
-      #controls { width: 740px; padding: 0 5px; }
+      #wrapper { width: 750px; margin: auto; position: relative; background: #DADADA; }
+      #controls { width: 740px; padding: 16px 5px 3px; }
       #controls audio { width: 100%; }
-      .talkie-panel { font-size: 320px; text-align: center; line-height: 320px; }
-      .talkie-panel span { vertical-align: middle; }
+      .talkie-slider-panel { font-size: 320px; text-align: center; line-height: 320px; }
+      .talkie-slider-panel span { vertical-align: middle; }
     </style>
   </head>
   <body id="example-02-slider">
     <div id="wrapper">
-      <div id="panels">
-        <div class="talkie-panel" id="panel-5"><span>5</span></div>
-        <div class="talkie-panel" id="panel-4"><span>4</span></div>
-        <div class="talkie-panel" id="panel-3"><span>3</span></div>
-        <div class="talkie-panel" id="panel-2"><span>2</span></div>
-        <div class="talkie-panel" id="panel-1"><span>1</span></div>
-        <div class="talkie-panel" id="panel-0"><span>✺</span></div>
+      <div id="slider" class="talkie-slider">
+        <div class="talkie-slider-panel" id="panel-5"><span>5</span></div>
+        <div class="talkie-slider-panel" id="panel-4"><span>4</span></div>
+        <div class="talkie-slider-panel" id="panel-3"><span>3</span></div>
+        <div class="talkie-slider-panel" id="panel-2"><span>2</span></div>
+        <div class="talkie-slider-panel" id="panel-1"><span>1</span></div>
+        <div class="talkie-slider-panel" id="panel-0"><span>✺</span></div>
       </div>
     
       <div id="controls">
@@ -41,17 +41,23 @@
     </div>
     
     <script>
-      var panels = Talkie.panels("#panels");
-      Talkie.timeline("#soundtrack", {
-        "0:01": panels.panel("4"),
-        "0:02": panels.panel("3"),
-        "0:03": panels.panel("2"),
-        "0:04": panels.panel("1"),
-        "0:05": panels.panel("0")
+      var slider = Talkie.slider("#slider");
+      var timeline = Talkie.timeline("#soundtrack", {
+        "0:01": slider.panel("4"),
+        "0:02": slider.panel("3"),
+        "0:03": slider.panel("2"),
+        "0:04": slider.panel("1"),
+        "0:05": slider.panel("0")
       });
-      Talkie.addEventListener("panel-0", "Talkie.panel.load", function() {
+      Talkie.addEventListener("#panel-0", "Talkie.slider.load", function() {
         d3.select("#panel-0 span").style("font-size", "12px").style("color", "#000000")
           .transition().duration(1500).style("font-size", "320px").style("color", "#F83195");
+      });
+      Talkie.addEventListener("#slider", "Talkie.slider.load", function(e) {
+        if (e.explicitly) {
+          var from_panel = e.fromPanel;
+          timeline.undoInteraction(function() { slider.slideTo(from_panel); });
+        }
       });
     </script>
   </body>

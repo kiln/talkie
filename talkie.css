@@ -8,19 +8,30 @@
   -moz-border-bottom-right-radius: 10px;
   position: relative;
   left: 25px;
-  overflow: hidden;
 }
 .talkie-slider-frame-inner {
   width: 680px;
   height: 350px;
   overflow: hidden;
 }
-.talkie-panels {
+.talkie-slider {
   width: 32767px;
   height: 350px;
 }
-.talkie-panel {
+.talkie-slider-panel {
   width: 680px;
   height: 350px;
   float: left;
+}
+.talkie-slider-arrowprev {
+  position: absolute;
+  top: 160px;
+  left: -24px;
+  opacity: 0;
+  border: none;
+}
+.talkie-slider-arrownext {
+  position: absolute;
+  top: 160px;
+  left: 700px;
 }
