@@ -39,6 +39,7 @@ Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
         animation_current_index = -1; // index of last animation performed
     var timecode;
     
+    var skip_the_next_timeUpdate = false;
     var timeline_object = {
         rewind: function() {
             if (soundtrack_element.readyState >= 1) {
@@ -53,6 +54,10 @@ Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
         },
         undoInteraction: function(undo_function) {
             animation_undo_stack.push([Infinity, undo_function, animation_current_index]);
+        },
+        pause: function() {
+            soundtrack_element.pause();
+            skip_the_next_timeUpdate = true;
         }
     };
 
@@ -61,6 +66,10 @@ Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
         soundtrack_element = document.querySelector(soundtrack_element);
     }
     soundtrack_element.addEventListener("timeupdate", function() {
+        if (skip_the_next_timeUpdate) {
+            skip_the_next_timeUpdate = false;
+            return;
+        }
         while (animation_undo_stack.length > 0
             && animation_undo_stack[animation_undo_stack.length-1][0] > this.currentTime)
         {

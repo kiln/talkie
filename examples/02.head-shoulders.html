@@ -35,11 +35,8 @@
         
         var arms = animate.select("#arms");
         function touch(body_part) {
-          return function() {
-            if (body_part.match(/^(eyes|ears|mouth|nose)$/))
-              animate.select("#"+body_part).style("opacity", "1", 100).run();
-            arms.attributes(["d"], "#arms-"+body_part, 200).run();
-          };
+          return arms.attributes(["d"], "#arms-"+body_part, 200).and(
+            animate.select("#"+body_part).style("opacity", "1", 100));
         }
         
         var stickman = animate.select("#stickman");
@@ -77,12 +74,10 @@
           16.7: touch("knees"),
           17.2: touch("toes"),
           
-          18.0: function() {
-            // A compound touch involving animations on different elements: move
-            // the arms into the neutral position, and zoom in on stickman’s face.
-            touch("neutral")();
-            stickman.attr("transform", "scale(1.8) translate(-165 -50)", 1000).run();
-          }
+          // A compound touch involving animations on different elements: move
+          // the arms into the neutral position, and zoom in on stickman’s face.
+          18.0: touch("neutral").and(
+              stickman.attr("transform", "scale(1.8) translate(-165 -50)", 1000))
         }, {
           onplay: removePlayButton
         });

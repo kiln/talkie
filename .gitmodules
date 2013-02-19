@@ -4,3 +4,6 @@
 [submodule "demos/02.head-shoulders"]
 	path = demos/02.head-shoulders
 	url = git@gist.github.com:4742544.git
+[submodule "demos/03.slider"]
+	path = demos/03.slider
+	url = git@gist.github.com:4978526.git

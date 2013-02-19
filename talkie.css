@@ -29,9 +29,17 @@
   left: -24px;
   opacity: 0;
   border: none;
+  width: 24px;
+  height: 43px;
+  background: url(arrow-prev.png);
+  cursor: pointer;
 }
 .talkie-slider-arrownext {
   position: absolute;
   top: 160px;
   left: 700px;
+  width: 24px;
+  height: 43px;
+  background: url(arrow-next.png);
+  cursor: pointer;
 }

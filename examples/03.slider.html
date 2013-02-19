@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Slider – Talkie demo 03</title>
-    <link rel="stylesheet" type="text/css" href="../talkie.css">
+    <link rel="stylesheet" type="text/css" href="media/03/talkie.css">
     
     <!-- scripts -->
     <script src="../lib/d3.v3.js"></script>
@@ -22,6 +22,9 @@
   <body id="example-02-slider">
     <div id="wrapper">
       <div id="slider" class="talkie-slider">
+        <div class="talkie-slider-arrowprev"></div>
+        <div class="talkie-slider-arrownext"></div>
+        
         <div class="talkie-slider-panel" id="panel-5"><span>5</span></div>
         <div class="talkie-slider-panel" id="panel-4"><span>4</span></div>
         <div class="talkie-slider-panel" id="panel-3"><span>3</span></div>
@@ -55,6 +58,7 @@
       });
       Talkie.addEventListener("#slider", "Talkie.slider.load", function(e) {
         if (e.explicitly) {
+          timeline.pause();
           var from_panel = e.fromPanel;
           timeline.undoInteraction(function() { slider.slideTo(from_panel); });
         }
