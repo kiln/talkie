@@ -1,9 +1,0 @@
-body { background: white; font-family: Helvetica, Arial, sans-serif; }
-#wrapper { width: 800px; margin: auto; position: relative; }
-#controls { width: 790px; padding: 0 5px; }
-#controls audio { width: 100%; }
-#stickman { width: 360px; height: 423px; margin: auto; display: block; }
-#credits  { text-align: right; margin: 8px 6px 0 0; }
-#credits a { color: #C3004D; }
-#play { width: 158px; height: 158px; position: absolute; top: 165px; left: 321px; background-image: url(play.png); background-repeat: no-repeat; cursor: pointer; }
-#play:hover { background-position: 0 -158px; }
