@@ -3,7 +3,20 @@
   <head>
     <meta charset="utf-8">
     <title>Head &amp; Shoulders – Talkie demo 02</title>
-    <link rel="stylesheet" type="text/css" href="media/02/style.css">
+    
+    <!-- stylesheet -->
+    <link rel="stylesheet" type="text/css" href="../talkie.css">
+    <!-- /stylesheet -->
+    
+    <style>
+      body { background: white; font-family: Helvetica, Arial, sans-serif; }
+      #wrapper { width: 800px; margin: auto; position: relative; }
+      #controls { width: 790px; padding: 0 5px; }
+      #controls audio { width: 100%; }
+      #stickman { width: 360px; height: 423px; margin: auto; display: block; }
+      #credits  { text-align: right; margin: 8px 6px 0 0; }
+      #credits a { color: #C3004D; }
+    </style>
     
     <!-- scripts -->
     <script src="../lib/d3.v3.js"></script>
@@ -13,7 +26,6 @@
   
   <body id="example-02-head-shoulders" onunload="">
     <div id="wrapper">
-      <div id="play"></div>
       <object id="stickman" data="media/02/stickman.svg" type="image/svg+xml" onload="init()"></object>
       <audio id="controls" controls="controls">
         <!-- audio -->
@@ -40,7 +52,7 @@
         }
         
         var stickman = animate.select("#stickman");
-        Talkie.timeline("#controls", {
+        var timeline = Talkie.timeline("#controls", {
           0.1: stickman.attr("transform", "translate(500 0)", 2000),
           2.6: stickman.attr("transform", "translate(0 0)", 1000),
           4.5: function() {
@@ -74,21 +86,11 @@
           16.7: touch("knees"),
           17.2: touch("toes"),
           
-          // A compound touch involving animations on different elements: move
-          // the arms into the neutral position, and zoom in on stickman’s face.
+          // move the arms into the neutral position and zoom in on stickman’s face.
           18.0: touch("neutral").and(
               stickman.attr("transform", "scale(1.8) translate(-165 -50)", 1000))
-        }, {
-          onplay: removePlayButton
         });
-        
-        var play_button = d3.select("#play");
-        play_button.on("click", function() {
-          document.getElementById("controls").play();
-        });
-        function removePlayButton() {
-          play_button.remove();
-        }
+        Talkie.ui.playButton("#wrapper", timeline);
       }
     </script>
   </body>

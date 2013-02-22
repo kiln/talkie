@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <title>Countdown – Talkie demo 01</title>
     
+    <!-- stylesheet -->
+    <link rel="stylesheet" type="text/css" href="../talkie.css">
+    <!-- /stylesheet -->
+    
     <!-- scripts -->
     <script src="../lib/d3.v3.js"></script>
     <script src="../talkie-1.0.js"></script>
@@ -37,7 +41,7 @@
     
     <script>
       var number = Talkie.animate().select("#big-number");
-      Talkie.timeline("#soundtrack", {
+      var timeline = Talkie.timeline("#soundtrack", {
         "0:01": number.text("4"),
         "0:02": number.text("3"),
         "0:03": number.text("2"),
@@ -45,6 +49,7 @@
         "0:05": number.style("font-size", "12px").text("✺")
                       .style({"font-size": "576px", "color": "#F83195"}, 500)
       });
+      Talkie.ui.playButton("#wrapper", timeline);
     </script>
   </body>
 </html>

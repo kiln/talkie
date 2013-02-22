@@ -12,6 +12,11 @@ function run(animation, timeline_object) {
     if (typeof animation === "function") {
         animation.call(timeline_object);
     }
+    else if (Object.prototype.toString.call(animation) === "[object Array]") {
+        for (var i=0; i < animation.length; i++) {
+            run(animation[i], timeline_object);
+        }
+    }
     else {
         animation.run(timeline_object);
     }
@@ -35,6 +40,8 @@ function order_timeline(timeline_object) {
 }
 
 Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
+    soundtrack_element = Talkie.element(soundtrack_element);
+    
     var animation_undo_stack = [],
         animation_current_index = -1; // index of last animation performed
     var timecode;
@@ -55,16 +62,19 @@ Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
         undoInteraction: function(undo_function) {
             animation_undo_stack.push([Infinity, undo_function, animation_current_index]);
         },
+        play: function() {
+            soundtrack_element.play();
+        },
         pause: function() {
             soundtrack_element.pause();
             skip_the_next_timeUpdate = true;
+        },
+        onPlay: function(event_handler) {
+            soundtrack_element.addEventListener("play", event_handler, false);
         }
     };
 
     var track_animations = order_timeline(timeline_spec);
-    if (typeof soundtrack_element === "string") {
-        soundtrack_element = document.querySelector(soundtrack_element);
-    }
     soundtrack_element.addEventListener("timeupdate", function() {
         if (skip_the_next_timeUpdate) {
             skip_the_next_timeUpdate = false;
@@ -89,7 +99,7 @@ Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
         }
     }, false);
     if (options && options.onplay) {
-        soundtrack_element.addEventListener("play", options.onplay, false);
+        timeline_object.onPlay(options.onplay);
     }
     
     return timeline_object;

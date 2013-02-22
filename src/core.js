@@ -27,3 +27,15 @@ Talkie.extend = function(d) {
         }
     }
 };
+
+Talkie.element = function(element_or_selector) {
+    if (typeof element_or_selector === "string") {
+        return document.querySelector(element_or_selector);
+    }
+    return element_or_selector;
+};
+
+Talkie.getStyle = function(element, style) {
+    if (element.currentStyle) return element.currentStyle[style];
+    return document.defaultView.getComputedStyle(element, null).getPropertyValue(style);
+};

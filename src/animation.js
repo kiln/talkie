@@ -1,3 +1,38 @@
+function Talkie_Animate_Base() {
+    this.animations = [];
+}
+Talkie_Animate_Base.prototype.clone = function() {
+    var r = new Talkie_Animate_Base();
+    r.animations = this.animations.slice(0);
+    return r;
+};
+Talkie_Animate_Base.prototype.pushAnimation = function(f, args) {
+    var r = this.clone();
+    r.animations.push([f, args]);
+    return r;
+};
+Talkie_Animate_Base.prototype.and = function(chained_animation) {
+    function runAnimation(timeline, chained_animation) {
+        if (typeof chained_animation === "function") {
+            chained_animation.call(timeline);
+        }
+        else {
+            chained_animation.run(timeline);
+        }
+    }
+    
+    return this.pushAnimation(runAnimation, chained_animation);
+};
+Talkie_Animate_Base.prototype.run = function(timeline) {
+    for (var i=0; i < this.animations.length; i++) {
+        var animation = this.animations[i],
+            method = animation[0],
+            args = animation[1];
+        method.call(this, timeline, args);
+    }
+};
+
+
 function startTransition(element, timeline, duration, easing) {
     if (typeof duration === "undefined") duration = 0;
     
@@ -51,6 +86,7 @@ Talkie.animate = function(root_element) {
 var animation_methods = [];
 
 Talkie_Animate.prototype._element = function(selector) {
+    if (selector instanceof window.Element) return d3.select(selector);
     var element = this._root.select(selector);
     if (element.empty()) {
         Talkie.warn("Selector does not match anything: " + selector + " in " + this._root);
@@ -161,11 +197,12 @@ Talkie_Animate.prototype.select = function(selector) {
     return new Talkie_Animate_Element(this, element);
 }
 
+
 function Talkie_Animate_Element(animate, element) {
     this.animate = animate;
     this.element = element;
-    this.animations = [];
 }
+Talkie_Animate_Element.prototype = new Talkie_Animate_Base();
 Talkie_Animate_Element.prototype.clone = function() {
     var r = new Talkie_Animate_Element(this.animate, this.element);
     r.animations = this.animations.slice(0);
@@ -176,28 +213,10 @@ Talkie_Animate_Element.prototype.clone = function() {
 for (var i=0; i < animation_methods.length; i++) {
     (function(method) {
         Talkie_Animate_Element.prototype[method] = function() {
-            var r = this.clone();
-            r.animations.push([method, Array.prototype.slice.call(arguments, 0)]);
-            return r;
+            if (this.element.empty()) return this;
+            return this.pushAnimation(function(timeline, args) {
+                this.animate[method].apply(this.animate, [this.element, timeline].concat(args));
+            }, Array.prototype.slice.call(arguments, 0));
         };
     })(animation_methods[i]);
 }
-Talkie_Animate_Element.prototype.and = function(chained_animation) {
-    var r = this.clone();
-    r.animations.push(["and", chained_animation]);
-    return r;
-};
-Talkie_Animate_Element.prototype.run = function(timeline) {
-    for (var i=0; i < this.animations.length; i++) {
-        var animation = this.animations[i],
-            method = animation[0],
-            args = animation[1];
-        
-        if (method === "and") {
-            if (typeof args === "function") args.call(timeline); else args.run(timeline);
-        }
-        else if (!this.element.empty()) {
-            this.animate[method].apply(this.animate, [this.element, timeline].concat(args));
-        }
-    }
-};

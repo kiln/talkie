@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>Slider – Talkie demo 03</title>
-    <link rel="stylesheet" type="text/css" href="media/03/talkie.css">
+    <!-- stylesheet -->
+    <link rel="stylesheet" type="text/css" href="../talkie.css">
+    <!-- /stylesheet -->
     
     <!-- scripts -->
     <script src="../lib/d3.v3.js"></script>
@@ -13,6 +15,8 @@
     <style>
       body { background: white; font-family: Helvetica, Arial, sans-serif; }
       #wrapper { width: 750px; margin: auto; position: relative; background: #DADADA; }
+      #header { width: 100%; background: #252535; color: yellow; line-height: 3em; text-align: center; }
+      #header h1 { margin: 0; }
       #controls { width: 740px; padding: 16px 5px 3px; }
       #controls audio { width: 100%; }
       .talkie-slider-panel { font-size: 320px; text-align: center; line-height: 320px; }
@@ -21,6 +25,9 @@
   </head>
   <body id="example-02-slider">
     <div id="wrapper">
+      <div id="header">
+        <h1>This is the Talkie slider</h1>
+      </div>
       <div id="slider" class="talkie-slider">
         <div class="talkie-slider-arrowprev"></div>
         <div class="talkie-slider-arrownext"></div>
@@ -32,7 +39,7 @@
         <div class="talkie-slider-panel" id="panel-1"><span>1</span></div>
         <div class="talkie-slider-panel" id="panel-0"><span>✺</span></div>
       </div>
-    
+      
       <div id="controls">
         <audio id="soundtrack" controls="controls">
           <!-- audio -->
@@ -52,15 +59,20 @@
         "0:04": slider.panel("1"),
         "0:05": slider.panel("0")
       });
+      
+      // When panel 0 loads, animate the asterisk
       Talkie.addEventListener("#panel-0", "Talkie.slider.load", function() {
         d3.select("#panel-0 span").style("font-size", "12px").style("color", "#000000")
           .transition().duration(1500).style("font-size", "320px").style("color", "#F83195");
       });
+      
+      // If a panel is loaded explicitly by the user,
+      // a) pause the soundtrack, if it’s playing,
+      // b) ask the panel to be slid back when the soundtrack resumes.
       Talkie.addEventListener("#slider", "Talkie.slider.load", function(e) {
         if (e.explicitly) {
           timeline.pause();
-          var from_panel = e.fromPanel;
-          timeline.undoInteraction(function() { slider.slideTo(from_panel); });
+          timeline.undoInteraction(function() { slider.slideTo(e.fromPanel); });
         }
       });
     </script>

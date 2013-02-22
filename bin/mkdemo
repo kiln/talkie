@@ -4,7 +4,7 @@ use warnings; use strict;
 
 my $mode = "cat";
 while (<>) {
-    if (m{<!-- (/)?(audio|scripts) -->}) {
+    if (m{<!-- (/)?(audio|scripts|stylesheet) -->}) {
         if ($1) {
             die "Mismatched tags" unless $mode eq $2;
             $mode = "cat";
@@ -22,6 +22,9 @@ while (<>) {
     elsif ($mode eq "scripts") {
         s{src="\.\./lib/(d3\.v\d)(?:\.min)?\.js"}{src="http://d3js.org/$1.min.js"};
         s{src="\.\./(talkie-[\d.]+)(?:\.min)?\.js"}{src="http://kiln.it/$1.min.js"};
+    }
+    elsif ($mode eq "stylesheet") {
+        s{href="\.\./(talkie.css)"}{href="http://kiln.it/talkie/ui/$ENV{TALKIE_UI_VERSION}/$1"};
     }
     
     s{"media/\d\d/([^"]+)"}{"$1"}g;

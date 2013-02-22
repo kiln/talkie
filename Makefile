@@ -1,4 +1,5 @@
-VERSION=1.0
+export TALKIE_VERSION=1.0
+export TALKIE_UI_VERSION=1.0
 
 UGLIFY=node_modules/uglify-js/bin/uglifyjs
 UGLIFY_OPTS=-m -c
@@ -8,19 +9,20 @@ LESSC_OPTS=
 
 .PHONY: all clean demos publish
 
-all: talkie-$(VERSION).js talkie-$(VERSION).min.js examples/style.css
+all: talkie-$(TALKIE_VERSION).js talkie-$(TALKIE_VERSION).min.js talkie.css
 
 clean:
-	@rm -f talkie-$(VERSION).js talkie-$(VERSION).min.js
+	@rm -f talkie-$(TALKIE_VERSION).js talkie-$(TALKIE_VERSION).min.js
 
 demos:
 	./demos.sh
 
 publish: all
-	scp talkie-$(VERSION)*.js kiln:kiln.it/
-	scp images/* kiln:kiln.it/talkie/ui/$(VERSION)/
+	scp talkie-$(TALKIE_VERSION)*.js kiln:kiln.it/
+	scp talkie.css kiln:kiln.it/talkie/ui/$(TALKIE_VERSION)/
+	scp images/* kiln:kiln.it/talkie/ui/$(TALKIE_VERSION)/images/
 
-talkie-1.0.js: src/core.js src/events.js src/jquery.js src/maps.js src/slider.js src/animation.js src/timeline.js
+talkie-1.0.js: src/core.js src/events.js src/maps.js src/ui.js src/slider.js src/animation.js src/timeline.js src/jquery.js
 	./build.sh $^ > $@.tmp && mv $@.tmp $@
 
 %.min.js: %.js
