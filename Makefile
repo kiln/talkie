@@ -1,3 +1,5 @@
+VERSION=1.0
+
 UGLIFY=node_modules/uglify-js/bin/uglifyjs
 UGLIFY_OPTS=-m -c
 
@@ -6,16 +8,17 @@ LESSC_OPTS=
 
 .PHONY: all clean demos publish
 
-all: talkie-1.0.js talkie-1.0.min.js examples/style.css
+all: talkie-$(VERSION).js talkie-$(VERSION).min.js examples/style.css
 
 clean:
-	@rm -f talkie-1.0.js talkie-1.0.min.js
+	@rm -f talkie-$(VERSION).js talkie-$(VERSION).min.js
 
 demos:
 	./demos.sh
 
 publish: all
-	scp talkie-1.0*.js kiln:kiln.it/
+	scp talkie-$(VERSION)*.js kiln:kiln.it/
+	scp images/* kiln:kiln.it/talkie/ui/$(VERSION)/
 
 talkie-1.0.js: src/core.js src/events.js src/jquery.js src/maps.js src/slider.js src/animation.js src/timeline.js
 	./build.sh $^ > $@.tmp && mv $@.tmp $@
