@@ -10,3 +10,6 @@
 [submodule "demos/05.multi-slider"]
 	path = demos/05.multi-slider
 	url = git@gist.github.com:5017753.git
+[submodule "wiki"]
+	path = wiki
+	url = git@github.com:kiln/talkie.wiki.git
