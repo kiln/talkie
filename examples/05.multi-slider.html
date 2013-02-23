@@ -96,16 +96,6 @@
         d3.selectAll(".panel-0 span").style("font-size", "12px").style("color", "#000000")
           .transition().duration(1500).style("font-size", "260px").style("color", "#F83195");
       });
-      
-      // If a panel is loaded explicitly by the user,
-      // a) pause the soundtrack, if it’s playing,
-      // b) ask the panel to be slid back when the soundtrack resumes.
-      Talkie.addEventListener(".talkie-slider", "Talkie.slider.load", function(e) {
-        if (e.explicitly) {
-          timeline.pause();
-          timeline.undoInteraction(function() { e.slider.slideTo(e.fromPanel); });
-        }
-      });
     </script>
   </body>
 </html>
