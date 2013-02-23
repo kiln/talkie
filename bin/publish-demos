@@ -1,0 +1,13 @@
+#!/bin/bash
+
+unset CDPATH
+
+hash=$(git rev-parse HEAD)
+for demo in demos/*
+do
+    (
+        cd "$demo"
+        git commit -a -m "Updated to $hash"
+        git push
+    )
+done

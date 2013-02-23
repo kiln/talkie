@@ -7,7 +7,7 @@ UGLIFY_OPTS=-m -c
 LESSC=node_modules/less/bin/lessc
 LESSC_OPTS=
 
-.PHONY: all clean demos publish
+.PHONY: all clean demos publish publish-demos
 
 all: talkie-$(TALKIE_VERSION).js talkie-$(TALKIE_VERSION).min.js talkie.css
 
@@ -21,6 +21,9 @@ publish: all
 	scp talkie-$(TALKIE_VERSION)*.js kiln:kiln.it/
 	scp talkie.css kiln:kiln.it/talkie/ui/$(TALKIE_VERSION)/
 	scp images/* kiln:kiln.it/talkie/ui/$(TALKIE_VERSION)/images/
+
+publish-demos: publish demos
+	bin/publish-demos
 
 talkie-1.0.js: src/core.js src/events.js src/maps.js src/ui.js src/slider.js src/animation.js src/timeline.js src/jquery.js
 	./build.sh $^ > $@.tmp && mv $@.tmp $@
