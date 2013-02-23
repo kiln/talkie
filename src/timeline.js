@@ -39,7 +39,7 @@ function order_timeline(timeline_object) {
     return track_animations;
 }
 
-Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
+Talkie.timeline = function(soundtrack_element, timeline_spec) {
     soundtrack_element = Talkie.element(soundtrack_element);
     
     var animation_undo_stack = [],
@@ -98,9 +98,6 @@ Talkie.timeline = function(soundtrack_element, timeline_spec, options) {
             animation_current_index = i;
         }
     }, false);
-    if (options && options.onplay) {
-        timeline_object.onPlay(options.onplay);
-    }
     
     return timeline_object;
 }

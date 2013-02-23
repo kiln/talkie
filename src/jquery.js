@@ -8,8 +8,8 @@ if (window.jQuery) {
     };
     
     var commands = {
-        "timeline": function(element, timeline, options) {
-            var t = Talkie.timeline(element, timeline, options);
+        "timeline": function(element, timeline) {
+            var t = Talkie.timeline(element, timeline);
             jQuery(element).data("_talkie_timeline", t);
         }
     };
