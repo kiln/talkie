@@ -7,3 +7,6 @@
 [submodule "demos/03.slider"]
 	path = demos/03.slider
 	url = git@gist.github.com:4978526.git
+[submodule "demos/05.multi-slider"]
+	path = demos/05.multi-slider
+	url = git@gist.github.com:5017753.git

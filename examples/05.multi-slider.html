@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>Slider – Talkie demo 03</title>
-    <link rel="stylesheet" type="text/css" href="media/03/talkie.css">
+    <!-- stylesheet -->
+    <link rel="stylesheet" type="text/css" href="../talkie.css">
+    <!-- /stylesheet -->
     
     <!-- scripts -->
     <script src="../lib/d3.v3.js"></script>
@@ -17,8 +19,8 @@
       #header h1 { margin: 0; }
       #controls { width: 740px; padding: 16px 5px 3px; }
       #controls audio { width: 100%; }
-      #wrapper .talkie-slider { width: 240px; }
-      .talkie-slider-panel { font-size: 320px; text-align: center; line-height: 320px; }
+      #wrapper .talkie-slider { width: 210px; display: inline-block; }
+      .talkie-slider-panel { font-size: 260px; text-align: center; line-height: 260px; }
       .talkie-slider-panel span { vertical-align: middle; }
     </style>
   </head>
@@ -33,7 +35,7 @@
         <div class="talkie-slider-panel" id="panel-left-3"><span>3</span></div>
         <div class="talkie-slider-panel" id="panel-left-2"><span>2</span></div>
         <div class="talkie-slider-panel" id="panel-left-1"><span>1</span></div>
-        <div class="talkie-slider-panel" id="panel-left-0"><span>✺</span></div>
+        <div class="talkie-slider-panel panel-0" id="panel-left-0"><span>✺</span></div>
       </div>
       <div id="slider-middle" class="talkie-slider">
         <div class="talkie-slider-panel" id="panel-middle-5"><span>5</span></div>
@@ -41,7 +43,7 @@
         <div class="talkie-slider-panel" id="panel-middle-3"><span>3</span></div>
         <div class="talkie-slider-panel" id="panel-middle-2"><span>2</span></div>
         <div class="talkie-slider-panel" id="panel-middle-1"><span>1</span></div>
-        <div class="talkie-slider-panel" id="panel-middle-0"><span>✺</span></div>
+        <div class="talkie-slider-panel panel-0" id="panel-middle-0"><span>✺</span></div>
       </div>
       <div id="slider-right" class="talkie-slider">
         <div class="talkie-slider-panel" id="panel-right-5"><span>5</span></div>
@@ -49,7 +51,7 @@
         <div class="talkie-slider-panel" id="panel-right-3"><span>3</span></div>
         <div class="talkie-slider-panel" id="panel-right-2"><span>2</span></div>
         <div class="talkie-slider-panel" id="panel-right-1"><span>1</span></div>
-        <div class="talkie-slider-panel" id="panel-right-0"><span>✺</span></div>
+        <div class="talkie-slider-panel panel-0" id="panel-right-0"><span>✺</span></div>
       </div>
       
       <div id="controls">
@@ -89,10 +91,10 @@
           .and( right.panel("right-0") )
       });
       
-      // When panel 0 loads, animate the asterisk
-      Talkie.addEventListener("#panel-0", "Talkie.slider.load", function() {
-        d3.select("#panel-0 span").style("font-size", "12px").style("color", "#000000")
-          .transition().duration(1500).style("font-size", "320px").style("color", "#F83195");
+      // When panel 0 loads, animate the asterisks
+      Talkie.addEventListener("#panel-middle-0", "Talkie.slider.load", function() {
+        d3.selectAll(".panel-0 span").style("font-size", "12px").style("color", "#000000")
+          .transition().duration(1500).style("font-size", "260px").style("color", "#F83195");
       });
       
       // If a panel is loaded explicitly by the user,

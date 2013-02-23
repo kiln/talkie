@@ -1,4 +1,4 @@
-.talkie-slider-frame {
+.talkie-slider {
   padding: 14px 10px 10px 10px;
   background: white;
   width: 680px;
@@ -9,23 +9,21 @@
   position: relative;
   left: 25px;
 }
-.talkie-slider-frame-inner {
-  width: 680px;
-  height: 350px;
+.talkie-slider-frame {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
 }
-.talkie-slider {
+.talkie-slider-panels {
   width: 32767px;
-  height: 350px;
+  height: 100%;
 }
 .talkie-slider-panel {
-  width: 680px;
-  height: 350px;
+  height: 100%;
   float: left;
 }
 .talkie-slider-arrowprev {
   position: absolute;
-  top: 160px;
   left: -24px;
   opacity: 0;
   border: none;
@@ -36,7 +34,6 @@
 }
 .talkie-slider-arrownext {
   position: absolute;
-  top: 160px;
   left: 700px;
   width: 24px;
   height: 43px;

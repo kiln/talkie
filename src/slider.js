@@ -10,41 +10,32 @@ var Talkie_Animate_Slider = function(slider, panel_name) {
 Talkie_Animate_Slider.prototype = new Talkie_Animate_Base();
 
 var Talkie_Slider = function(element_or_selector) {
-    this.panels = Talkie.element(element_or_selector);
+    var slider_element = Talkie.element(element_or_selector);
     
-    var frame = document.createElement("div");
-    frame.className = "talkie-slider-frame";
-    this.frame_inner = document.createElement("div");
-    this.frame_inner.className = "talkie-slider-frame-inner";
-
-    var arrow_prev_maybe = this.panels.getElementsByClassName("talkie-slider-arrowprev");
-    this.arrow_prev = arrow_prev_maybe.length ? arrow_prev_maybe[0] : null;
-
-    var arrow_next_maybe = this.panels.getElementsByClassName("talkie-slider-arrownext");
-    this.arrow_next = arrow_next_maybe.length ? arrow_next_maybe[0] : null;
+    this.arrow_prev = slider_element.getElementsByClassName("talkie-slider-arrowprev")[0];
+    this.arrow_next = slider_element.getElementsByClassName("talkie-slider-arrownext")[0];
     
-    if (this.arrow_prev) frame.appendChild(this.arrow_prev);
-    frame.appendChild(this.frame_inner);
-    if (this.arrow_next) frame.appendChild(this.arrow_next);
-    this.panels.parentNode.insertBefore(frame, this.panels);
+    this.frame = document.createElement("div");
+    this.frame.className = "talkie-slider-frame";
+    slider_element.appendChild(this.frame);
+    
+    this.panels = document.createElement("div");
+    this.panels.className = "talkie-slider-panels";
+    this.frame.appendChild(this.panels);
     
     this.selected_panel = 0;
-    this.panel_elements = [];
-    for (var i=0; i < this.panels.childNodes.length; i++) {
-        var node = this.panels.childNodes[i];
-        if (node.getAttribute && node.className === "talkie-slider-panel")
-            this.panel_elements.push(this.panels.childNodes[i]);
-    }
+    this.panel_elements = slider_element.querySelectorAll(".talkie-slider-panel");
     this.num_panels = this.panel_elements.length;
-    this.frame_inner.appendChild(this.panels);
-    
     this.panels_by_name = {};
-    for (var i=0; i < this.num_panels; i++) {
-        this.panels_by_name[this.panel_elements[i].id.substr("panel-".length)] = i;
+    for (var i=0; i < this.panel_elements.length; i++) {
+        var panel = this.panel_elements[i];
+        this.panels.appendChild(panel);
+        panel.style.width = this.frame.offsetWidth + "px";
+        this.panels_by_name[panel.id.substr("panel-".length)] = i;
     }
     
     if (d3) {
-        d3.select(this.panels).selectAll(".panel").data(d3.range(this.num_panels));
+        d3.select(this.panels).selectAll(".talkie-slider-panel").data(d3.range(this.num_panels));
     
         d3.select(".navdotcontainer").selectAll(".navdot")
             .data(d3.range(this.num_panels)).enter()
@@ -63,12 +54,16 @@ var Talkie_Slider = function(element_or_selector) {
     
     var slider = this;
     if (this.arrow_next) {
+        slider_element.appendChild(this.arrow_next);
+        this.arrow_next.style.top = (slider_element.offsetHeight - this.arrow_next.offsetHeight) / 2 + "px";
         Talkie.addEventListener(this.arrow_next, "click", function(e) {
             Talkie.preventDefault(e);
             slider._selectNextPanel();
         });
     }
     if (this.arrow_prev) {
+        slider_element.appendChild(this.arrow_prev);
+        this.arrow_prev.style.top = (slider_element.offsetHeight - this.arrow_prev.offsetHeight) / 2 + "px";
         Talkie.addEventListener(this.arrow_prev, "click", function(e) {
             Talkie.preventDefault(e);
             slider._selectPreviousPanel();
@@ -91,7 +86,7 @@ Talkie_Slider.prototype._panelChanged = function(explicitly) {
     
     if (d3) {
         d3.select(this.panels).transition().duration(500)
-            .style("margin-left", (-this.frame_inner.clientWidth * this.selected_panel) + "px");
+            .style("margin-left", (-this.frame.clientWidth * this.selected_panel) + "px");
     
         if (this.arrow_prev) {
             d3.select(this.arrow_prev).transition().duration(500).style("opacity", this.selected_panel == 0 ? 0 : 1);
@@ -101,7 +96,7 @@ Talkie_Slider.prototype._panelChanged = function(explicitly) {
         }
     }
     else {
-        this.panels.style.marginLeft = (-this.frame_inner.clientWidth * this.selected_panel) + "px";
+        this.panels.style.marginLeft = (-this.frame.clientWidth * this.selected_panel) + "px";
         
         if (this.arrow_prev) {
             if (this.selected_panel == 0) {
