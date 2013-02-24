@@ -36,23 +36,13 @@ var Talkie_Slider = function(element_or_selector) {
     
     if (d3) {
         d3.select(this.panels).selectAll(".talkie-slider-panel").data(d3.range(this.num_panels));
-    
-        d3.select(".navdotcontainer").selectAll(".navdot")
-            .data(d3.range(this.num_panels)).enter()
-            .append("div").attr("class", "navdot");
-        var navdots = d3.select(".navdotcontainer").selectAll(".navdot");
     }
+    var nav = slider_element.querySelector(".talkie-slider-nav");
+    if (nav) this.navigation(nav);
     
     this._panelChanged();
-
-    if (navdots) {
-        navdots.on("click", function(i) {
-            this._selectPanel(i);
-            return false;
-        });
-    }
-    
     var slider = this;
+    
     if (this.arrow_next) {
         slider_element.appendChild(this.arrow_next);
         this.arrow_next.style.top = (slider_element.offsetHeight - this.arrow_next.offsetHeight) / 2 + "px";
@@ -72,6 +62,25 @@ var Talkie_Slider = function(element_or_selector) {
 };
 
 
+Talkie_Slider.prototype.navigation = function(element_or_selector) {
+    var slider = this;
+    var element = Talkie.element(element_or_selector);
+    if (d3) {
+        var nav = d3.select(element);
+        nav.selectAll(".talkie-slider-nav-dot")
+            .data(d3.range(this.num_panels)).enter()
+            .append("div").attr("class", "talkie-slider-nav-dot");
+        this.navdots = nav.selectAll(".talkie-slider-nav-dot");
+        
+        this.navdots.on("click", function(i) {
+            slider._selectPanel(i);
+            return false;
+        });
+        
+        this._markSelectedNavDot();
+    }
+    return this;
+};
 Talkie_Slider.prototype.panel = function(panel_name) {
     return new Talkie_Animate_Slider(this, panel_name);
 };
@@ -114,12 +123,8 @@ Talkie_Slider.prototype._panelChanged = function(explicitly) {
                 this.arrow_next.style.visibility = "visible";
         }
     }
-
-    if (this.navdots) {
-        this.navdots.classed("navdotselected", function(d,i) {
-            return (i == this.selected_panel);
-        });
-    }
+    
+    this._markSelectedNavDot();
     
     Talkie.fireEvent("Talkie.slider.load", this.panel_elements[this.selected_panel], {
         "explicitly": explicitly,
@@ -127,6 +132,14 @@ Talkie_Slider.prototype._panelChanged = function(explicitly) {
         "toPanel": this.selected_panel_name,
         "slider": this
     });
+};
+Talkie_Slider.prototype._markSelectedNavDot = function() {
+    if (this.navdots) {
+        var slider = this;
+        this.navdots.classed("talkie-slider-nav-dot-selected", function(d,i) {
+            return (i == slider.selected_panel);
+        });
+    }
 };
 Talkie_Slider.prototype._selectPanel = function(i) {
     this.selected_panel = i;

@@ -20,7 +20,7 @@
       #slider { padding: 14px 10px 10px 10px; background: white; width: 680px; position: relative; left: 25px;
                 border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;
                 -moz-border-bottom-left-radius: 10px; -moz-border-bottom-right-radius: 10px; }
-      #controls { width: 740px; padding: 16px 5px 3px; }
+      #controls { width: 740px; padding: 8px 5px 3px; }
       #controls audio { width: 100%; }
       .talkie-slider-panel { font-size: 320px; text-align: center; line-height: 320px; }
       .talkie-slider-panel span { vertical-align: middle; }
@@ -43,6 +43,8 @@
         <div class="talkie-slider-panel" id="panel-0"><span>✺</span></div>
       </div>
       
+      <div class="talkie-slider-nav"></div>
+      
       <div id="controls">
         <audio id="soundtrack" controls="controls">
           <!-- audio -->
@@ -54,7 +56,7 @@
     </div>
     
     <script>
-      var slider = Talkie.slider("#slider");
+      var slider = Talkie.slider("#slider").navigation(".talkie-slider-nav");
       var timeline = Talkie.timeline("#soundtrack", {
         "0:01": slider.panel("4"),
         "0:02": slider.panel("3"),
