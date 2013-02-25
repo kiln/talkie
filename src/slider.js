@@ -12,6 +12,10 @@ Talkie_Animate_Slider.prototype = new Talkie_Animate_Base();
 var Talkie_Slider = function(element_or_selector) {
     var slider_element = Talkie.element(element_or_selector);
     
+    if (!slider_element.classList.contains("talkie-slider")) {
+        slider_element.classList.add("talkie-slider");
+    }
+    
     this.arrow_prev = slider_element.getElementsByClassName("talkie-slider-arrowprev")[0];
     this.arrow_next = slider_element.getElementsByClassName("talkie-slider-arrownext")[0];
     
@@ -67,6 +71,7 @@ Talkie_Slider.prototype.navigation = function(element_or_selector) {
     var element = Talkie.element(element_or_selector);
     if (d3) {
         var nav = d3.select(element);
+        nav.classed("talkie-slider-nav", true);
         nav.selectAll(".talkie-slider-nav-dot")
             .data(d3.range(this.num_panels)).enter()
             .append("div").attr("class", "talkie-slider-nav-dot");
