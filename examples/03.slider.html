@@ -35,12 +35,12 @@
         <div class="talkie-slider-arrowprev"></div>
         <div class="talkie-slider-arrownext"></div>
         
-        <div class="talkie-slider-panel" id="panel-5"><span>5</span></div>
-        <div class="talkie-slider-panel" id="panel-4"><span>4</span></div>
-        <div class="talkie-slider-panel" id="panel-3"><span>3</span></div>
-        <div class="talkie-slider-panel" id="panel-2"><span>2</span></div>
-        <div class="talkie-slider-panel" id="panel-1"><span>1</span></div>
-        <div class="talkie-slider-panel" id="panel-0"><span>✺</span></div>
+        <div class="talkie-slider-panel" id="five"><span>5</span></div>
+        <div class="talkie-slider-panel" id="four"><span>4</span></div>
+        <div class="talkie-slider-panel" id="three"><span>3</span></div>
+        <div class="talkie-slider-panel" id="two"><span>2</span></div>
+        <div class="talkie-slider-panel" id="one"><span>1</span></div>
+        <div class="talkie-slider-panel" id="zero"><span>✺</span></div>
       </div>
       
       <div class="talkie-slider-nav"></div>
@@ -58,16 +58,16 @@
     <script>
       var slider = Talkie.slider("#slider").navigation(".talkie-slider-nav");
       var timeline = Talkie.timeline("#soundtrack", {
-        "0:01": slider.panel("4"),
-        "0:02": slider.panel("3"),
-        "0:03": slider.panel("2"),
-        "0:04": slider.panel("1"),
-        "0:05": slider.panel("0")
+        "0:01": slider.panel("#four"),
+        "0:02": slider.panel("#three"),
+        "0:03": slider.panel("#two"),
+        "0:04": slider.panel("#one"),
+        "0:05": slider.panel("#zero")
       });
       
       // When panel 0 loads, animate the asterisk
-      Talkie.addEventListener("#panel-0", "Talkie.slider.load", function() {
-        d3.select("#panel-0 span").style("font-size", "12px").style("color", "#000000")
+      Talkie.addEventListener("#zero", "Talkie.slider.load", function() {
+        d3.select("#zero span").style("font-size", "12px").style("color", "#000000")
           .transition().duration(1500).style("font-size", "320px").style("color", "#F83195");
       });
       

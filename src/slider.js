@@ -1,9 +1,13 @@
-var Talkie_Animate_Slider = function(slider, panel_name) {
+var Talkie_Animate_Slider = function(slider, panel_element_or_selector) {
+    var panel_element = Talkie.element(panel_element_or_selector);
+    if (!panel_element) return;
+    var panel_index = panel_element.getAttribute("data-talkie-panel-index");
+    
     this.animations = [[function(timeline) {
-        var previously_selected_panel = slider.selected_panel_name;
-        slider._selectPanelByName(panel_name);
+        var previously_selected_panel = slider.selected_panel;
+        slider._selectPanel(panel_index);
         timeline.setUndo(function() {
-            slider._selectPanelByName(previously_selected_panel);
+            slider._selectPanel(previously_selected_panel);
         });
     }]];
 };
@@ -30,12 +34,11 @@ var Talkie_Slider = function(element_or_selector) {
     this.selected_panel = 0;
     this.panel_elements = slider_element.querySelectorAll(".talkie-slider-panel");
     this.num_panels = this.panel_elements.length;
-    this.panels_by_name = {};
     for (var i=0; i < this.panel_elements.length; i++) {
         var panel = this.panel_elements[i];
         this.panels.appendChild(panel);
         panel.style.width = this.frame.offsetWidth + "px";
-        this.panels_by_name[panel.id.substr("panel-".length)] = i;
+        panel.setAttribute("data-talkie-panel-index", i);
     }
     
     if (d3) {
@@ -86,17 +89,16 @@ Talkie_Slider.prototype.navigation = function(element_or_selector) {
     }
     return this;
 };
-Talkie_Slider.prototype.panel = function(panel_name) {
-    return new Talkie_Animate_Slider(this, panel_name);
+Talkie_Slider.prototype.panel = function(panel_element_or_selector) {
+    return new Talkie_Animate_Slider(this, panel_element_or_selector);
 };
-Talkie_Slider.prototype.slideTo = function(panel_name) {
-    this._selectPanelByName(panel_name);
+Talkie_Slider.prototype.slideTo = function(panel_element_or_selector) {
+    this._selectPanelByElement(Talkie.element(panel_element_or_selector));
 };
 
 // explicitly - true if the panel was changed explicitly by the user
 Talkie_Slider.prototype._panelChanged = function(explicitly) {
-    var previously_selected_panel_name = this.selected_panel_name;
-    this.selected_panel_name = this.panel_elements[this.selected_panel].id.substr("panel-".length);
+    var previously_selected_panel = this.selected_panel;
     
     if (d3) {
         d3.select(this.panels).transition().duration(500)
@@ -133,8 +135,8 @@ Talkie_Slider.prototype._panelChanged = function(explicitly) {
     
     Talkie.fireEvent("Talkie.slider.load", this.panel_elements[this.selected_panel], {
         "explicitly": explicitly,
-        "fromPanel": previously_selected_panel_name,
-        "toPanel": this.selected_panel_name,
+        "fromPanel": this.panel_elements[previously_selected_panel],
+        "toPanel": this.panel_elements[this.selected_panel],
         "slider": this
     });
 };
@@ -150,9 +152,10 @@ Talkie_Slider.prototype._selectPanel = function(i) {
     this.selected_panel = i;
     this._panelChanged();
 };
-Talkie_Slider.prototype._selectPanelByName = function(panel_name) {
-    if (panel_name in this.panels_by_name)
-        this._selectPanel(this.panels_by_name[panel_name]);
+Talkie_Slider.prototype._selectPanelByElement = function(element) {
+    if (!element) return;
+    this.selected_panel = element.getAttribute("data-talkie-panel-index");
+    this._panelChanged();
 };
 Talkie_Slider.prototype._selectNextPanel = function() {
     if (this.selected_panel == this.num_panels-1) return;

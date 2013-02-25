@@ -30,28 +30,28 @@
         <h1>Three sliders at once!</h1>
       </div>
       <div id="slider-left" class="talkie-slider">
-        <div class="talkie-slider-panel" id="panel-left-5"><span>5</span></div>
-        <div class="talkie-slider-panel" id="panel-left-4"><span>4</span></div>
-        <div class="talkie-slider-panel" id="panel-left-3"><span>3</span></div>
-        <div class="talkie-slider-panel" id="panel-left-2"><span>2</span></div>
-        <div class="talkie-slider-panel" id="panel-left-1"><span>1</span></div>
-        <div class="talkie-slider-panel panel-0" id="panel-left-0"><span>✺</span></div>
+        <div id="left-5"><span>5</span></div>
+        <div id="left-4"><span>4</span></div>
+        <div id="left-3"><span>3</span></div>
+        <div id="left-2"><span>2</span></div>
+        <div id="left-1"><span>1</span></div>
+        <div class="panel-0" id="left-0"><span>✺</span></div>
       </div>
       <div id="slider-middle" class="talkie-slider">
-        <div class="talkie-slider-panel" id="panel-middle-5"><span>5</span></div>
-        <div class="talkie-slider-panel" id="panel-middle-4"><span>4</span></div>
-        <div class="talkie-slider-panel" id="panel-middle-3"><span>3</span></div>
-        <div class="talkie-slider-panel" id="panel-middle-2"><span>2</span></div>
-        <div class="talkie-slider-panel" id="panel-middle-1"><span>1</span></div>
-        <div class="talkie-slider-panel panel-0" id="panel-middle-0"><span>✺</span></div>
+        <div id="middle-5"><span>5</span></div>
+        <div id="middle-4"><span>4</span></div>
+        <div id="middle-3"><span>3</span></div>
+        <div id="middle-2"><span>2</span></div>
+        <div id="middle-1"><span>1</span></div>
+        <div class="panel-0" id="middle-0"><span>✺</span></div>
       </div>
       <div id="slider-right" class="talkie-slider">
-        <div class="talkie-slider-panel" id="panel-right-5"><span>5</span></div>
-        <div class="talkie-slider-panel" id="panel-right-4"><span>4</span></div>
-        <div class="talkie-slider-panel" id="panel-right-3"><span>3</span></div>
-        <div class="talkie-slider-panel" id="panel-right-2"><span>2</span></div>
-        <div class="talkie-slider-panel" id="panel-right-1"><span>1</span></div>
-        <div class="talkie-slider-panel panel-0" id="panel-right-0"><span>✺</span></div>
+        <div id="right-5"><span>5</span></div>
+        <div id="right-4"><span>4</span></div>
+        <div id="right-3"><span>3</span></div>
+        <div id="right-2"><span>2</span></div>
+        <div id="right-1"><span>1</span></div>
+        <div class="panel-0" id="right-0"><span>✺</span></div>
       </div>
       
       <div id="controls">
@@ -65,34 +65,35 @@
     </div>
     
     <script>
+      d3.selectAll(".talkie-slider > div").classed("talkie-slider-panel", true);
       var left = Talkie.slider("#slider-left"),
           middle = Talkie.slider("#slider-middle"),
           right = Talkie.slider("#slider-right");
       
       var timeline = Talkie.timeline("#soundtrack", {
-        "0:01.000": left.panel("left-4"),
-        "0:01.333": middle.panel("middle-4"),
-        "0:01.667": right.panel("right-4"),
+        "0:01.000": left.panel("#left-4"),
+        "0:01.333": middle.panel("#middle-4"),
+        "0:01.667": right.panel("#right-4"),
         
-        "0:02.000": left.panel("left-3"),
-        "0:02.333": middle.panel("middle-3"),
-        "0:02.667": right.panel("right-3"),
+        "0:02.000": left.panel("#left-3"),
+        "0:02.333": middle.panel("#middle-3"),
+        "0:02.667": right.panel("#right-3"),
         
-        "0:03.000": left.panel("left-2"),
-        "0:03.333": middle.panel("middle-2"),
-        "0:03.667": right.panel("right-2"),
+        "0:03.000": left.panel("#left-2"),
+        "0:03.333": middle.panel("#middle-2"),
+        "0:03.667": right.panel("#right-2"),
         
-        "0:04.000": left.panel("left-1"),
-        "0:04.333": middle.panel("middle-1"),
-        "0:04.667": right.panel("right-1"),
+        "0:04.000": left.panel("#left-1"),
+        "0:04.333": middle.panel("#middle-1"),
+        "0:04.667": right.panel("#right-1"),
         
-        "0:05.000": left.panel("left-0")
-          .and( middle.panel("middle-0") )
-          .and( right.panel("right-0") )
+        "0:05.000": left.panel("#left-0")
+          .and( middle.panel("#middle-0") )
+          .and( right.panel("#right-0") )
       });
       
       // When panel 0 loads, animate the asterisks
-      Talkie.addEventListener("#panel-middle-0", "Talkie.slider.load", function() {
+      Talkie.addEventListener("#middle-0", "Talkie.slider.load", function() {
         d3.selectAll(".panel-0 span").style("font-size", "12px").style("color", "#000000")
           .transition().duration(1500).style("font-size", "260px").style("color", "#F83195");
       });
