@@ -17,6 +17,6 @@ Talkie.ui.playButton = function(element_or_selector, timeline) {
         timeline.play();
     });
     timeline.onPlay(function() {
-        element.removeChild(play_button);
+        try { element.removeChild(play_button); } catch (exception) { }
     })
 };
