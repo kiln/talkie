@@ -47,7 +47,7 @@
         
         var arms = animate.select("#arms");
         function touch(body_part) {
-          return arms.attributes(["d"], "#arms-"+body_part, 200).and(
+          return arms.morphTo("#arms-"+body_part, 200).and(
             animate.select("#"+body_part).style("opacity", "1", 100));
         }
         

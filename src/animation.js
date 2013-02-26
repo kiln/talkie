@@ -126,12 +126,25 @@ Talkie_Animate.prototype.attr = function(element, timeline, attribute, to_value,
     return this;
 };
 
-animation_methods.push("attributes");
-Talkie_Animate.prototype.attributes = function(element, timeline, attributes, target_selector, duration, easing) {
+animation_methods.push("morphTo");
+// which attributes determine the morphology of the element?
+var morphAttributes = {
+    "circle": ["cx", "cy", "r"],
+    "path": ["d"],
+    "line": ["x1", "y1", "x2", "y2"]
+};
+Talkie_Animate.prototype.morphTo = function(element, timeline, target_selector, duration, easing) {
     var target = this._element(target_selector);
+    if (target.empty()) return;
     
     var t = startTransition(element, timeline, duration, easing)
     var from_values = [];
+    var attributes = morphAttributes[target.node().nodeName]; // which attributes to morph
+    if (!attributes) {
+        Talkie.warn("Talkie doesn’t know how to morph a " + target.node().nodeName + " element");
+        return;
+    }
+    
     for (var i=0; i < attributes.length; i++) {
         var attribute = attributes[i];
         from_values.push(element.attr(attribute));
