@@ -16,7 +16,13 @@ Talkie_Animate_Slider.prototype = new Talkie_Animate_Base();
 var Talkie_Slider = function(element_or_selector) {
     var slider_element = Talkie.element(element_or_selector);
     
-    if (!slider_element.classList.contains("talkie-slider")) {
+    if (!slider_element.classList) {
+        // Oh, hello IE!
+        if (!slider_element.className.match(/\btalkie-slider\b/)) {
+            slider_element.className += " talkie-slider";
+        }
+    }
+    else if (!slider_element.classList.contains("talkie-slider")) {
         slider_element.classList.add("talkie-slider");
     }
     
