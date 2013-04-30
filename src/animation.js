@@ -70,6 +70,7 @@ Talkie_Animate_Base.prototype.and = function(chained_animation) {
     return this.pushAnimation(runAnimation, chained_animation);
 };
 Talkie_Animate_Base.prototype.run = function(timeline) {
+    if (!timeline) timeline = {setUndo: function() {}};
     for (var i=0; i < this.animations.length; i++) {
         var animation = this.animations[i],
             method = animation[0],

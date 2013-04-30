@@ -1,5 +1,5 @@
 export TALKIE_MAJOR_VERSION=1.0
-export TALKIE_VERSION=1.0.2
+export TALKIE_VERSION=1.0.3
 export TALKIE_UI_VERSION=1.0
 
 UGLIFY=node_modules/uglify-js/bin/uglifyjs
