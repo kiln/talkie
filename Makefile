@@ -33,7 +33,7 @@ talkie-$(TALKIE_VERSION).js: src/core.js src/events.js src/maps.js src/ui.js src
 talkie-$(TALKIE_MAJOR_VERSION).js: talkie-$(TALKIE_VERSION).js
 	@ln -sf talkie-$(TALKIE_VERSION).js talkie-$(TALKIE_MAJOR_VERSION).js
 
-talkie-$(TALKIE_MAJOR_VERSION).min.js: talkie-$(TALKIE_VERSION).js
+talkie-$(TALKIE_MAJOR_VERSION).min.js: talkie-$(TALKIE_VERSION).min.js
 	@ln -sf talkie-$(TALKIE_VERSION).min.js talkie-$(TALKIE_MAJOR_VERSION).min.js
 
 %.min.js: %.js
