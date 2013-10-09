@@ -124,7 +124,10 @@ function cancelTransition(element) {
 
 function Talkie_Animate(root_element) {
     if (typeof root_element === "undefined") root_element = document;
-    this._root = d3.select(root_element)
+    this._root = d3.select(root_element);
+    if (this._root.empty()) {
+        Talkie.warn("Selector does not match anything: " + root_element);
+    }
 }
 Talkie.animate = function(root_element) {
     return new Talkie_Animate(root_element);
@@ -133,8 +136,8 @@ Talkie.animate = function(root_element) {
 var animation_methods = [];
 
 Talkie_Animate.prototype._element = function(selector) {
-    if (selector instanceof window.Element) return d3.select(selector);
-    var element = this._root.select(selector);
+    if (selector instanceof window.Element) return d3.selectAll(selector);
+    var element = this._root.selectAll(selector);
     if (element.empty()) {
         Talkie.warn("Selector does not match anything: " + selector + " in " + this._root);
     }
