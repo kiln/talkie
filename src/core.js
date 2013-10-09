@@ -1,5 +1,5 @@
 Talkie = {
-    "version": "1.0.3"
+    "version": "1.1.0"
 };
 
 var warn = Talkie.warn = function() {

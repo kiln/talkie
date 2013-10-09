@@ -1,3 +1,4 @@
+# When version is changed, it must also be changed in src/core.js and package.json
 export TALKIE_MAJOR_VERSION=1.1
 export TALKIE_VERSION=1.1.0
 export TALKIE_UI_VERSION=1.0
