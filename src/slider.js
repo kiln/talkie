@@ -1,7 +1,7 @@
 var Talkie_Animate_Slider = function(slider, panel_element_or_selector) {
     var panel_element = Talkie.element(panel_element_or_selector);
     if (!panel_element) return;
-    var panel_index = panel_element.getAttribute("data-talkie-panel-index");
+    var panel_index = parseInt(panel_element.getAttribute("data-talkie-panel-index"));
     
     this.animations = [[function(timeline) {
         var previously_selected_panel = slider.selected_panel;
@@ -104,7 +104,7 @@ Talkie_Slider.prototype.slideTo = function(panel_element_or_selector) {
 // explicitly - true if the panel was changed explicitly by the user
 Talkie_Slider.prototype._panelChanged = function(new_panel, explicitly) {
     var previously_selected_panel = this.selected_panel;
-    this.selected_panel = new_panel;
+    this.selected_panel = parseInt(new_panel);
     
     if (d3) {
         d3.select(this.panels).transition().duration(500)
