@@ -57,9 +57,11 @@ Talkie.timeline = function(soundtrack_element, timeline_spec) {
             }
         },
         setUndo: function(undo_function) {
+            if (this.undoing) return;
             animation_undo_stack.push([timecode, undo_function, animation_current_index]);
         },
         undoInteraction: function(undo_function) {
+            if (this.undoing) return;
             animation_undo_stack.push([Infinity, undo_function, animation_current_index]);
         },
         play: function() {
@@ -80,6 +82,8 @@ Talkie.timeline = function(soundtrack_element, timeline_spec) {
             skip_the_next_timeUpdate = false;
             return;
         }
+        
+        timeline_object.undoing = true;
         while (animation_undo_stack.length > 0
             && animation_undo_stack[animation_undo_stack.length-1][0] > this.currentTime)
         {
@@ -87,6 +91,7 @@ Talkie.timeline = function(soundtrack_element, timeline_spec) {
             stack_top[1].call(timeline_object);
             animation_current_index = stack_top[2];
         }
+        timeline_object.undoing = false;
         
         for (var i = animation_current_index + 1;
              i < track_animations.length && track_animations[i][0] <= this.currentTime;

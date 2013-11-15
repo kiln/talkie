@@ -1,6 +1,6 @@
 # When version is changed, it must also be changed in src/core.js and package.json
-export TALKIE_MAJOR_VERSION=1.1
-export TALKIE_VERSION=1.1.1
+export TALKIE_MAJOR_VERSION=1.2
+export TALKIE_VERSION=1.2.0
 export TALKIE_UI_VERSION=1.0
 
 UGLIFY=node_modules/uglify-js/bin/uglifyjs
