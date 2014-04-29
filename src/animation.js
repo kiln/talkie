@@ -107,6 +107,7 @@ function startTransition(element, timeline, duration, easing) {
     };
 }
 function cancelTransition(element) {
+    if (element.interrupt) element.interrupt();
     element.transition().duration(0);
     var node = element.node();
     var k = node.__kiln_transitions__;
