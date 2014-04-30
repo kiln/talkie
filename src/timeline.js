@@ -47,6 +47,32 @@ Talkie.timeline = function(soundtrack_element, timeline_spec) {
     var timecode;
     
     var skip_the_next_timeUpdate = false;
+    var handleTimeUpdate = function() {
+        if (skip_the_next_timeUpdate) {
+            skip_the_next_timeUpdate = false;
+            return;
+        }
+        
+        timeline_object.undoing = true;
+        while (animation_undo_stack.length > 0
+            && animation_undo_stack[animation_undo_stack.length-1][0] > this.currentTime)
+        {
+            var stack_top = animation_undo_stack.pop();
+            stack_top[1].call(timeline_object);
+            animation_current_index = stack_top[2];
+        }
+        timeline_object.undoing = false;
+        
+        for (var i = animation_current_index + 1;
+             i < track_animations.length && track_animations[i][0] <= this.currentTime;
+             i++
+        ) {
+            timeline_object.fast_forward = (i+1 < track_animations.length && track_animations[i+1][0] <= this.currentTime);
+            timecode = track_animations[i][0];
+            run(track_animations[i][1], timeline_object);
+            animation_current_index = i;
+        }
+    };
     var timeline_object = {
         rewind: function() {
             if (soundtrack_element.readyState >= 1) {
@@ -73,36 +99,14 @@ Talkie.timeline = function(soundtrack_element, timeline_spec) {
         },
         onPlay: function(event_handler) {
             soundtrack_element.addEventListener("play", event_handler, false);
+        },
+        remove: function() {
+            soundtrack_element.removeEventListener("timeupdate", handleTimeUpdate);
         }
     };
 
     var track_animations = order_timeline(timeline_spec);
-    soundtrack_element.addEventListener("timeupdate", function() {
-        if (skip_the_next_timeUpdate) {
-            skip_the_next_timeUpdate = false;
-            return;
-        }
-        
-        timeline_object.undoing = true;
-        while (animation_undo_stack.length > 0
-            && animation_undo_stack[animation_undo_stack.length-1][0] > this.currentTime)
-        {
-            var stack_top = animation_undo_stack.pop();
-            stack_top[1].call(timeline_object);
-            animation_current_index = stack_top[2];
-        }
-        timeline_object.undoing = false;
-        
-        for (var i = animation_current_index + 1;
-             i < track_animations.length && track_animations[i][0] <= this.currentTime;
-             i++
-        ) {
-            timeline_object.fast_forward = (i+1 < track_animations.length && track_animations[i+1][0] <= this.currentTime);
-            timecode = track_animations[i][0];
-            run(track_animations[i][1], timeline_object);
-            animation_current_index = i;
-        }
-    }, false);
+    soundtrack_element.addEventListener("timeupdate", handleTimeUpdate, false);
     
     return timeline_object;
 }
