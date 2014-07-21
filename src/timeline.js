@@ -102,6 +102,9 @@ Talkie.timeline = function(soundtrack_element, timeline_spec) {
         onPlay: function(event_handler) {
             soundtrack_element.addEventListener("play", event_handler, false);
         },
+        onPause: function(event_handler) {
+            soundtrack_element.addEventListener("pause", event_handler, false);
+        },
         remove: function() {
             soundtrack_element.removeEventListener("timeupdate", handleTimeUpdate);
         }
