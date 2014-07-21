@@ -53,6 +53,7 @@ Talkie.timeline = function(soundtrack_element, timeline_spec) {
             return;
         }
         
+        timeline_object.running = true;
         timeline_object.undoing = true;
         while (animation_undo_stack.length > 0
             && animation_undo_stack[animation_undo_stack.length-1][0] > this.currentTime)
@@ -72,6 +73,7 @@ Talkie.timeline = function(soundtrack_element, timeline_spec) {
             run(track_animations[i][1], timeline_object);
             animation_current_index = i;
         }
+        timeline_object.running = false;
     };
     var timeline_object = {
         rewind: function() {
